@@ -18,6 +18,14 @@ app.get('/test', async (request, response) => {
   response.send(todos);
 })
 
+app.post('/test', async (req, res) => {
+  const todo = await Todo.create({
+    text: req.body.text,
+    done: false
+  })
+  res.send(todo);
+});
+
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
