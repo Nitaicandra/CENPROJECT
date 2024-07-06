@@ -12,8 +12,8 @@
 2. To stop the containers:
 ```docker-compose down```
 
-To access the frontend of the application, go to http://localhost:5137
-To access the backend/api of the application, go to http://localhost:30001
+To access the frontend of the application, go to http://localhost:5173
+To access the backend/api of the application, go to http://localhost:3001
 
 # Development guidelines
 1. Any changes in code must come in the form of a PR and from your forked repo
