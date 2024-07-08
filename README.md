@@ -3,7 +3,7 @@
 2. [Install Docker Desktop](https://docs.docker.com/engine/install/) and make sure you can use docker-compose on CLI
 3. [Fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) the main repository
 4. Clone your forked repository
-5. Important: You will need two .env files. One to be placed within the server package, and another in the root of the project. You can get these files in our dicord channel :)
+5. Important: You will need two .env files. One to be placed within the server package, and another in the root of the project. You can get these files in our discord channel :)
 
 # Run the application
 1. Go to your local (forked) repository and build the containers:
