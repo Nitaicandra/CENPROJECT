@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
+const express = require('express');
 
-mongoose.set('strictQuery', false)
-
+const app = express();
+const cors = require('cors');
 const url = process.env.MONGODB_URI
+
+const usersRouter = require('./controllers/users');
 
 console.log('connecting to', url)
 
@@ -15,9 +18,10 @@ mongoose.connect(url, {
     console.log('error connecting to MongoDB:', error.message)
   })
 
-  const todoSchema = new mongoose.Schema({
-    text: String,
-    done: Boolean
-  })
+app.use(cors());
+app.use(express.static('build'));
+app.use(express.json());
 
-module.exports = mongoose.model('Todo', todoSchema)
+app.use('/api/users', usersRouter);
+
+module.exports = app;
