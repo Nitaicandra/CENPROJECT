@@ -9,7 +9,4 @@ db.createUser({
     ],
   });
 
-  db.createCollection('todos');
-
-  db.todos.insertOne({ text: 'Write code', done: true });
-  db.todos.insertOne({ text: 'Learn about containers', done: false });
+  db.createCollection('users');
