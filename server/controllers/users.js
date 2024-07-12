@@ -30,6 +30,8 @@ usersRouter.post('/providers', async (request, response) => {
     response.json(users);
   });
 
+  module.exports = usersRouter;
+
 usersRouter.post('/customers', async (request, response) => {
     // Post a new customer user account
     const { username, password } = request.body;
