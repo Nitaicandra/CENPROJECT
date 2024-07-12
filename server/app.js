@@ -6,6 +6,7 @@ const cors = require('cors');
 const url = process.env.MONGODB_URI
 
 const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 
 console.log('connecting to', url)
 
@@ -23,5 +24,6 @@ app.use(express.static('build'));
 app.use(express.json());
 
 app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
 module.exports = app;

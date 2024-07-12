@@ -7,9 +7,6 @@ usersRouter.post('/providers', async (request, response) => {
     const { username, password } = request.body;
     const type = "provider"
 
-    console.log("username is " + username)
-    console.log("password is " + password)
-  
     if (!password || !username) {
       return response.status(400).json({ error: 'a password and username are required' });
     }
