@@ -25,7 +25,7 @@ For react/vite:
 For node/express:
 ```npm run dev```
 
-3. Make sure you build after every successful chnage in the frontend:
+3. Make sure you build after every successful change in the frontend:
 ```npm run build```
 
 4. Make sure you update the containers after development with:
