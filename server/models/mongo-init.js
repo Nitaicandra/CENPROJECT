@@ -10,3 +10,6 @@ db.createUser({
   });
 
   db.createCollection('users');
+  db.createCollection('services');
+  db.createCollection('reviews');
+  db.createCollection('bookings');
