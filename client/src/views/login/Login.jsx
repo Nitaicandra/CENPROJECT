@@ -54,18 +54,14 @@ const Login = () => {
   }
 
   return (
-    <>
-      <div>
-        <h1>Welcome to LocalPro Connect</h1>
-
-        {user === null ?
-          loginForm() :
-          <div>
-            <p>{user.username} logged-in</p>
-          </div>
-        }
-      </div>
-    </>
+    <div>
+      {user === null ?
+        loginForm() :
+        <div>
+          <p>{user.username} logged-in</p>
+        </div>
+      }
+    </div>
   )
 }
 
