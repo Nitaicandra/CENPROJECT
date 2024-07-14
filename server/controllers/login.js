@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
-const User = require('../models/user')
+const Auth = require('../models/authentication')
 require("dotenv").config();
 const secret = process.env.SECRET
 
 loginRouter.post('/', async (request, response) => {
     // Handles token authentication 
     const { username, password } = request.body;
-    const user = await User.findOne({ username });
+    const user = await Auth.findOne({ username });
     
     const passwordCorrect = user === null
       ? false

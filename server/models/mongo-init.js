@@ -9,7 +9,9 @@ db.createUser({
     ],
   });
 
-  db.createCollection('users');
+  db.createCollection('customers');
+  db.createCollection('businesses');
+  db.createCollection('logins');
   db.createCollection('services');
   db.createCollection('reviews');
   db.createCollection('bookings');
