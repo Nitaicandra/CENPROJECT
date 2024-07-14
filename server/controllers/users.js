@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const usersRouter = require('express').Router();
 const Business = require('../models/business');
+const Customer = require('../models/customer');
 const Authentication = require('../models/authentication')
 
 async function createAuth (accType, username, password){
@@ -24,13 +25,13 @@ usersRouter.post('/businesses', async (request, response) => {
       return response.status(400).json({ error: 'a username and password are required' });
     }
 
-    const type = 'business'
-    const login = await createAuth(type, username, password);
-
     const { businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
     if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
       return response.status(400).json({ error: 'missing field(s) when creating a business account' });
     }
+
+    const type = 'business'
+    const login = await createAuth(type, username, password);
 
     avStr = JSON.stringify(availability)
 
@@ -50,6 +51,37 @@ usersRouter.post('/businesses', async (request, response) => {
     await user.save()
     response.status(201).json(login);
 });
+
+usersRouter.post('/customers', async (request, response) => {
+  // Post a new customer user account
+  const { username, password } = request.body;
+  if (!password || !username) {
+    return response.status(400).json({ error: 'a username and password are required' });
+  }
+
+  const { firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
+  if ( !firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {
+    return response.status(400).json({ error: 'missing field(s) when creating a customer account' });
+  }
+
+  const type = 'customer'
+  const login = await createAuth(type, username, password);
+
+  const user = new Customer({
+    firstName, 
+    lastName,
+    address,
+    zipCode,
+    city,
+    state, 
+    email,
+    phoneNumber,
+    login: login._id
+  })
+
+  await user.save()
+  response.status(201).json(login);
+});
   
 usersRouter.get('/', async (request, response) => {
     // Get all logins
@@ -63,32 +95,10 @@ usersRouter.get('/businesses', async (request, response) => {
   response.json(providers);
 });
 
-/*usersRouter.post('/customers', async (request, response) => {
-    // Post a new customer user account
-    const { username, password } = request.body;
-    const type = "customer"
-
-    if (!password || !username) {
-      return response.status(400).json({ error: 'a username and password are required' });
-    }
-  
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(password, saltRounds);
-  
-    const user = new User({
-      username,
-      passwordHash,
-      type
-    });
-  
-    const savedUser = await user.save();
-    response.status(201).json(savedUser);
+usersRouter.get('/customers', async (request, response) => {
+  // Get all customer accounts
+  const providers = await Customer.find({});
+  response.json(providers);
 });
-  
-  usersRouter.get('/', async (request, response) => {
-    // Get all users
-    const users = await User.find({});
-    response.json(users);
-  }); */
 
-  module.exports = usersRouter;
+module.exports = usersRouter;
