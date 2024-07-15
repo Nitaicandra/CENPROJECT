@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import loginService from '../../services/login'
 import LoginForm from '../../components/LoginForm'
+import Alert from '../../components/Alert'
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null)
+  const [alertType, setAlertType] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -32,7 +34,8 @@ const Login = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('Error: Wrong credentials')
+      setAlertType('alert-error')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -42,6 +45,7 @@ const Login = () => {
   const loginForm = () => {
     return(
       <div>
+        <Alert message={errorMessage} type={alertType} />
         <LoginForm
             username={username}
             password={password}

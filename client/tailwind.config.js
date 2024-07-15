@@ -9,5 +9,9 @@ export default {
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('daisyui'),
   ],
+  daisyui: {
+    themes: ["light"]
+  },
 }
