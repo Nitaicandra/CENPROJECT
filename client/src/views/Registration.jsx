@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import BusinessRegForm from "../components/BusinessRegForm"
 import CustomerRegForm from "../components/CustomerRegForm"
@@ -6,9 +7,11 @@ import regisrationService from "../services/registration"
 import Alert from '../components/Alert'
 
 const Registration = () => {
+  const navigate = useNavigate();
+
   //Common states to both forms 
   const [accType, setAccType] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [alertMessage, setAlertMessage] = useState(null)
   const [alertType, setAlertType] = useState(null)
 
   const [username, setUsername] = useState('')
@@ -97,12 +100,20 @@ const Registration = () => {
         phoneNumber,
         availability: formattedAvailability
       })
+
+      setAlertMessage('Account was successfully created')
+      setAlertType('alert-success')
+      setTimeout(() => {
+        setAlertMessage(null)
+        navigate('/')
+      }, 5000)
+
     } catch (exception) {
-      setErrorMessage(exception.response.data.error)
+      setAlertMessage(exception.response.data.error)
       setAlertType('alert-error')
       setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+        setAlertMessage(null)
+      }, 3000)
     }
   }
 
@@ -156,7 +167,7 @@ const Registration = () => {
         {accType === 'customer' && <CustomerRegForm />}
       </div>
       <br></br>
-      <Alert message={errorMessage} type={alertType} />
+      <Alert message={alertMessage} type={alertType} />
     </>
   )
 }
