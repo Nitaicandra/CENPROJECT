@@ -33,12 +33,7 @@ servicesRouter.post('/', async(request, response) => {
     if (!business){
         return response.status(403).json({ error: 'no business account attached to this user' });
     }
-
-    console.log(business)
-    console.log(user)
-    console.log(business._id)
-    console.log(user._id)
-
+    
     const {serviceName, description, price} = request.body
     const service = new Service({
         provider: business._id,
