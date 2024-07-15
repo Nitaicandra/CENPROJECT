@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const LoginForm = ({
     handleSubmit,
     handleUsernameChange,
@@ -73,9 +75,12 @@ const LoginForm = ({
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{' '}
-            <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            <a href="" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               Create an account
             </a>
+            <Link to={"./register"} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Create an account
+            </Link>
           </p>
         </div>
       </div>

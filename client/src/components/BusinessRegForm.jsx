@@ -1,7 +1,27 @@
-const BusinessRegForm = ({}) => {
+const BusinessRegForm = ({
+  username, 
+  password,
+  businessName,
+  address,
+  zipCode,
+  city,
+  state,
+  email,
+  phoneNumber,
+  handleUsernameChange,
+  handlePasswordChange,
+  handleBusinessNameChange,
+  handleAddressChange,
+  handleZipCodeChnage,
+  handleCityChange,
+  handleStateChange,
+  handleEmailChange,
+  handlePhoneNumberChange,
+  handleSubmit
+}) => {
    return (
     <div>
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">Business Profile</h2>
@@ -22,6 +42,8 @@ const BusinessRegForm = ({}) => {
                     type="text"
                     placeholder="evilcorp"
                     autoComplete="username"
+                    value={username}
+                    onChange={handleUsernameChange}
                     required
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
@@ -40,6 +62,8 @@ const BusinessRegForm = ({}) => {
                     name="password"
                     type="text"
                     autoComplete="password"
+                    value={password}
+                    onChange={handlePasswordChange}
                     required
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
@@ -64,6 +88,8 @@ const BusinessRegForm = ({}) => {
                     type="text"
                     autoComplete="business-name"
                     placeholder="Evil Corp."
+                    value={businessName}
+                    onChange={handleBusinessNameChange}
                     required
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
@@ -83,6 +109,8 @@ const BusinessRegForm = ({}) => {
                   type="email"
                   autoComplete="email"
                   placeholder="business@evilcorp.com"
+                  value={email}
+                  onChange={handleEmailChange}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -93,17 +121,16 @@ const BusinessRegForm = ({}) => {
               <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
                 Country
               </label>
+              <p className="mt-1 text-sm leading-6 text-gray-600">Only available in the US for now.</p>
               <div className="mt-2">
-                <select
+                <input
                   id="country"
                   name="country"
                   autoComplete="country-name"
+                  value="United States"
+                  disabled
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  <option>United States</option>
-                  <option>Canada</option>
-                  <option>Mexico</option>
-                </select>
+                />
               </div>
             </div>
 
@@ -117,6 +144,8 @@ const BusinessRegForm = ({}) => {
                   name="street-address"
                   type="text"
                   autoComplete="street-address"
+                  value={address}
+                  onChange={handleAddressChange}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -133,6 +162,8 @@ const BusinessRegForm = ({}) => {
                   name="city"
                   type="text"
                   autoComplete="address-level2"
+                  value={city}
+                  onChange={handleCityChange}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -148,6 +179,8 @@ const BusinessRegForm = ({}) => {
                   id="state"
                   name="state"
                   autoComplete="state-name"
+                  value={state}
+                  onChange={handleStateChange}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
@@ -215,6 +248,8 @@ const BusinessRegForm = ({}) => {
                   name="postal-code"
                   type="text"
                   autoComplete="postal-code"
+                  value={zipCode}
+                  onChange={handleZipCodeChnage}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -232,6 +267,8 @@ const BusinessRegForm = ({}) => {
                   type="tel"
                   autoComplete="phone"
                   placeholder="(111) 222-3333"
+                  value={phoneNumber}
+                  onChange={handlePhoneNumberChange}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -278,9 +315,7 @@ const BusinessRegForm = ({}) => {
             </div>
          </div>
       </div>
-
-              
-        </div>
+      </div>
       </div>
 
       <div className="mt-6 flex items-center justify-end gap-x-6">
