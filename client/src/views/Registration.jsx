@@ -5,6 +5,7 @@ import CustomerRegForm from "../components/CustomerRegForm"
 import regisrationService from "../services/registration"
 
 const Registration = () => {
+  //Common states to both forms 
   const [accType, setAccType] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
@@ -15,6 +16,17 @@ const Registration = () => {
   const [city, setCity] = useState('') 
   const [state, setState] = useState('') 
   const [phoneNumber, setPhoneNumber] = useState('')
+
+  // Availability states
+  const [availability, setAvailability] = useState({
+    sunday: { checked: false, start: '', end: '' },
+    monday: { checked: false, start: '', end: '' },
+    tuesday: { checked: false, start: '', end: '' },
+    wednesday: { checked: false, start: '', end: '' },
+    thursday: { checked: false, start: '', end: '' },
+    friday: { checked: false, start: '', end: '' },
+    saturday: { checked: false, start: '', end: '' } 
+  })
   
   const clearStates = () => {
     setUsername('')
@@ -38,14 +50,33 @@ const Registration = () => {
     setAccType('customer');
   }
 
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setAvailability((prevState) => ({
+      ...prevState,
+      [name]: { ...prevState[name], checked }
+    }));
+  }
+
+  const handleTimeChange = (e) => {
+    const { name, value } = e.target;
+    const [day, time] = name.split('-');
+    setAvailability((prevState) => ({
+      ...prevState,
+      [day]: { ...prevState[day], [time]: value }
+    }));
+  }
+
   const handleBusiness = async (event) => {
     event.preventDefault()
 
-    // remove this line once av is implemented
-    const availability = [{
-      "Monday": [{"start": "9:00", "end": "12:00"}],
-      "Tuesday": [{"start": "9:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}]
-    }]
+    const formattedAvailability = Object.keys(availability)
+    .filter((day) => availability[day].checked) 
+    .map((day) => ({
+      [day.charAt(0).toUpperCase() + day.slice(1)]: [
+        { start: availability[day].start, end: availability[day].end }
+      ]
+    }));
 
     await regisrationService.registerBusiness({
       username, 
@@ -57,7 +88,7 @@ const Registration = () => {
       state,
       email,
       phoneNumber,
-      availability
+      availability: formattedAvailability
     })
 }
 
@@ -73,6 +104,7 @@ const businessRegForm = () => {
       state={state}
       email={email}
       phoneNumber={phoneNumber}
+      availability={availability}
 
       handleUsernameChange={({ target }) => setUsername(target.value)}
       handlePasswordChange={({ target }) => setPassword(target.value)}
@@ -83,6 +115,8 @@ const businessRegForm = () => {
       handleStateChange={({ target }) => setState(target.value)}
       handleEmailChange={({ target }) => setEmail(target.value)}
       handlePhoneNumberChange={({ target }) => setPhoneNumber(target.value)}
+      handleCheckboxChange={handleCheckboxChange}
+      handleTimeChange={handleTimeChange}
 
       handleSubmit={handleBusiness}
     />

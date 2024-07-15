@@ -8,6 +8,7 @@ const BusinessRegForm = ({
   state,
   email,
   phoneNumber,
+  availability,
   handleUsernameChange,
   handlePasswordChange,
   handleBusinessNameChange,
@@ -17,6 +18,8 @@ const BusinessRegForm = ({
   handleStateChange,
   handleEmailChange,
   handlePhoneNumberChange,
+  handleCheckboxChange,
+  handleTimeChange,
   handleSubmit
 }) => {
    return (
@@ -171,7 +174,7 @@ const BusinessRegForm = ({
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="region" className="block text-sm font-medium leading-6 text-gray-900">
+              <label htmlFor="state" className="block text-sm font-medium leading-6 text-gray-900">
                 State / Province
               </label>
               <div className="mt-2">
@@ -285,32 +288,44 @@ const BusinessRegForm = ({
           </p>
           <br></br>
 
-          <div class="mb-6">
-         <div class="flex items-center justify-between">
-            <div class="flex items-center min-w-[4rem]">
-               <input id="monday" name="days" type="checkbox" value="monday" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-               <label for="monday" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Mon</label>
+          <div className="mb-6">
+         <div className="flex items-center justify-between">
+            <div className="flex items-center min-w-[4rem]">
+               <input 
+                id="monday" name="monday" type="checkbox" value="monday" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                checked={availability.monday.checked}
+                onChange={handleCheckboxChange}
+                />
+               <label htmlFor="monday" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Mon</label>
             </div>
-            <div class="w-full max-w-[7rem]">
-               <label for="start-time-monday" class="text-sm">Start time:</label>
-               <div class="relative">
-                  <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+            <div className="w-full max-w-[7rem]">
+               <label htmlFor="start-time-monday" className="text-sm">Start time:</label>
+               <div className="relative">
+                  <div className="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                     <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clipRule="evenodd"/>
                      </svg>
                   </div>
-                  <input type="time" id="start-time-monday" name="start-time-monday" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                  <input 
+                    type="time" id="start-time-monday" name="monday-start" className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required 
+                    value={availability.monday.start}
+                    onChange={handleTimeChange}
+                    />
                </div>
             </div>
-            <div class="w-full max-w-[7rem]">
-               <label for="end-time-monday" class="text-sm">End time:</label>
-               <div class="relative">
-                  <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+            <div className="w-full max-w-[7rem]">
+               <label htmlFor="end-time-monday" className="text-sm">End time:</label>
+               <div className="relative">
+                  <div className="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                     <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clipRule="evenodd"/>
                      </svg>
                   </div>
-                  <input type="time" id="end-time-monday" name="end-time-monday" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                  <input 
+                  type="time" id="end-time-monday" name="monday-end" className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required 
+                  value={availability.monday.end}
+                  onChange={handleTimeChange}
+                  />
                </div>
             </div>
          </div>
