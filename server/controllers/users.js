@@ -21,7 +21,13 @@ async function createAuth (accType, username, password){
 usersRouter.post('/businesses', async (request, response) => {
     // Post a new business user account
 
-    const { username, password, businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
+    const { username, password } = request.body;
+
+    if (!password || !username) {
+      return response.status(400).json({ error: 'a username and password are required' });
+    }
+
+    const { businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
     
     // checks for missing fields
     if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
@@ -63,7 +69,13 @@ usersRouter.post('/businesses', async (request, response) => {
 usersRouter.post('/customers', async (request, response) => {
   // Post a new customer user account
 
-  const { username, password, firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
+  const { username, password } = request.body;
+
+  if (!password || !username) {
+    return response.status(400).json({ error: 'a username and password are required' });
+  }
+
+  const { firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
 
   // checks for missing fields
   if ( !firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {

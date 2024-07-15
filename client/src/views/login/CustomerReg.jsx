@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import loginService from '../../services/login'
-import AccountCreateForm from '../../components/AccountCreateForm'
+import CustomerRegForm from '../../components/CustomerRegForm'
 import Alert from '../../components/Alert'
 
 const Create = () => {
@@ -46,11 +46,11 @@ const Create = () => {
     */
   }
 
-  const accountCreateForm = () => {
+  const customerRegForm = () => {
     return(
       <div>
         <Alert message={errorMessage} type={alertType} />
-        <AccountCreateForm
+        <CustomerRegForm
             username={username}
             password={password}
             handleUsernameChange={({ target }) => setUsername(target.value)}
@@ -64,7 +64,7 @@ const Create = () => {
   return (
     <div>
       {user === null ?
-        accountCreateForm() :
+        customerRegForm() :
         <div>
           <p>{user.username} account created</p>
         </div>
