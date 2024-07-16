@@ -20,14 +20,21 @@ async function createAuth (accType, username, password){
 
 usersRouter.post('/businesses', async (request, response) => {
     // Post a new business user account
-    const { username, password } = request.body;
-    if (!password || !username) {
-      return response.status(400).json({ error: 'a username and password are required' });
-    }
+    const { username, password, businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
 
-    const { businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
+    // checks for missing fields
     if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
       return response.status(400).json({ error: 'missing field(s) when creating a business account' });
+    }
+
+    // checks for existing username / email
+    const existingUser = await Authentication.findOne({ username });
+    if (existingUser) {
+      return response.status(400).json({ error: 'username already exists, please select another' });
+    }
+    const existingEmail = await Business.findOne({ email });
+    if (existingEmail) {
+      return response.status(400).json({ error: 'email is associated with existing account, please select another' });
     }
 
     const type = 'business'
@@ -54,14 +61,21 @@ usersRouter.post('/businesses', async (request, response) => {
 
 usersRouter.post('/customers', async (request, response) => {
   // Post a new customer user account
-  const { username, password } = request.body;
-  if (!password || !username) {
-    return response.status(400).json({ error: 'a username and password are required' });
-  }
+  const { username, password, firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
 
-  const { firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
+  // checks for missing fields
   if ( !firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {
     return response.status(400).json({ error: 'missing field(s) when creating a customer account' });
+  }
+
+  // checks for existing username / email
+  const existingUser = await Authentication.findOne({ username });
+  if (existingUser) {
+    return response.status(400).json({ error: 'username already exists, please select another' });
+  }
+  const existingEmail = await Customer.findOne({ email });
+  if (existingEmail) {
+    return response.status(400).json({ error: 'email is associated with existing account, please select another' });
   }
 
   const type = 'customer'
