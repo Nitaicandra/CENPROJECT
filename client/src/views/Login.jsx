@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import loginService from '../../services/login'
-import LoginForm from '../../components/LoginForm'
-import Alert from '../../components/Alert'
+import loginService from '../services/login'
+import LoginForm from '../components/LoginForm'
+import Alert from '../components/Alert'
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null)

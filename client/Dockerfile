@@ -11,6 +11,7 @@ RUN npm run build
 
 # Copy the static file to my Nginx folder to serve static container
 FROM nginx:1.25.2-alpine-slim
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 
