@@ -14,11 +14,15 @@ const businessSchema = new mongoose.Schema({
       min: 0,
       max: 5
     },
-    login : {
+    login: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Authentication',
       required: true,
-    }
+    },
+    services: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service',
+    }]
   })
 
   businessSchema.set('toJSON', {
