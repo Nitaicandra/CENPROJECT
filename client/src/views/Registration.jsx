@@ -148,28 +148,56 @@ const Registration = () => {
     )
   }
 
-  return (
-    <>
-      <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-        <button
-          className="mr-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          onClick={() => onClickCustomer()} >
-          I am a customer
-        </button>
-        <button
-          className="mx-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
-          onClick={() => onClickBusiness()}>
-          I am a business
-        </button>
-      </div>
-      <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-        {accType === 'business' && businessRegForm()}
-        {accType === 'customer' && <CustomerRegForm />}
-      </div>
-      <br></br>
-      <Alert message={alertMessage} type={alertType} />
-    </>
-  )
+  if (accType == 'business') {
+    return (
+      <>
+        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
+          <button
+            className="mr-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
+            onClick={() => onClickCustomer()} >
+            I am a customer
+          </button>
+          <button
+            className="mx-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={() => onClickBusiness()}>
+            I am a business
+          </button>
+        </div>
+        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
+          {accType === 'business' && businessRegForm()}
+          {accType === 'customer' && <CustomerRegForm />}
+        </div>
+        <br></br>
+        <Alert message={alertMessage} type={alertType} />
+      </>
+    )
+  }
+
+  else { // if customer (default)
+    return (
+      <>
+        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
+          <button
+            className="mr-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={() => onClickCustomer()} >
+            I am a customer
+          </button>
+          <button
+            className="mx-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
+            onClick={() => onClickBusiness()}>
+            I am a business
+          </button>
+        </div>
+        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
+          {accType === 'business' && businessRegForm()}
+          {accType === 'customer' && <CustomerRegForm />}
+        </div>
+        <br></br>
+        <Alert message={alertMessage} type={alertType} />
+      </>
+    )
+  }
+
 }
 
 export default Registration
