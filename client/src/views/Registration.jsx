@@ -148,6 +148,10 @@ const Registration = () => {
     )
   }
 
+  if (accType == null) {
+    setAccType('customer');
+  }
+
   if (accType == 'business') {
     return (
       <>
