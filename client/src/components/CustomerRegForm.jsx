@@ -40,7 +40,7 @@ const CustomerRegForm = ({
                       id="username"
                       name="username"
                       type="text"
-                      placeholder="evilcorp"
+                      placeholder="johndoe123"
                       autoComplete="username"
                       value={username}
                       onChange={handleUsernameChange}
@@ -77,17 +77,38 @@ const CustomerRegForm = ({
             <p className="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
 
             <div className="mt-5 sm:col-span-4">
-              <label htmlFor="business-name" className="block text-sm font-medium leading-6 text-gray-900">
-                Business Name
+              <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+                First Name
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                   <input
-                    id="business-name"
-                    name="business-name"
+                    id="first-name"
+                    name="first-name"
                     type="text"
-                    autoComplete="business-name"
-                    placeholder="Evil Corp."
+                    autoComplete="first-name"
+                    placeholder="John"
+                    value={businessName}
+                    onChange={handleBusinessNameChange}
+                    required
+                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 sm:col-span-4">
+              <label htmlFor="last-name" className="block text-sm font-medium leading-6 text-gray-900">
+                Last Name
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                  <input
+                    id="last-name"
+                    name="last-name"
+                    type="text"
+                    autoComplete="last-name"
+                    placeholder="Doe"
                     value={businessName}
                     onChange={handleBusinessNameChange}
                     required
@@ -108,7 +129,7 @@ const CustomerRegForm = ({
                     name="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="business@evilcorp.com"
+                    placeholder="johndoe@email.com"
                     value={email}
                     onChange={handleEmailChange}
                     required
