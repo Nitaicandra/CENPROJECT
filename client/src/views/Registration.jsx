@@ -92,7 +92,7 @@ const Registration = () => {
       }));
 
     try {
-      await regisrationService.registerBusiness({
+      await registrationService.registerBusiness({
         username,
         password,
         businessName,
@@ -135,7 +135,7 @@ const Registration = () => {
     */
 
     try {
-      await regisrationService.registerCustomer({
+      await registrationService.registerCustomer({
         username,
         password,
         firstName,
@@ -146,7 +146,6 @@ const Registration = () => {
         state,
         email,
         phoneNumber,
-        availability: formattedAvailability
       })
 
       setAlertMessage('Account was successfully created')
@@ -209,7 +208,6 @@ const Registration = () => {
         state={state}
         email={email}
         phoneNumber={phoneNumber}
-        availability={availability}
 
         handleUsernameChange={({ target }) => setUsername(target.value)}
         handlePasswordChange={({ target }) => setPassword(target.value)}
@@ -221,8 +219,6 @@ const Registration = () => {
         handleStateChange={({ target }) => setState(target.value)}
         handleEmailChange={({ target }) => setEmail(target.value)}
         handlePhoneNumberChange={({ target }) => setPhoneNumber(target.value)}
-        handleCheckboxChange={handleCheckboxChange}
-        handleTimeChange={handleTimeChange}
 
         handleSubmit={handleCustomer}
       />
