@@ -17,6 +17,8 @@ const Registration = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [businessName, setBusinessName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [address, setAddress] = useState('')
   const [zipCode, setZipCode] = useState('')
@@ -40,6 +42,8 @@ const Registration = () => {
     setUsername('')
     setPassword('')
     setBusinessName('')
+    setFirstName('')
+    setLastName('')
     setEmail('')
     setAddress('')
     setZipCode('')
@@ -117,6 +121,50 @@ const Registration = () => {
     }
   }
 
+  const handleCustomer = async (event) => {
+    event.preventDefault()
+
+    /*
+    const formattedAvailability = Object.keys(availability)
+      .filter((day) => availability[day].checked)
+      .map((day) => ({
+        [day.charAt(0).toUpperCase() + day.slice(1)]: [
+          { start: availability[day].start, end: availability[day].end }
+        ]
+      }));
+    */
+
+    try {
+      await regisrationService.registerCustomer({
+        username,
+        password,
+        firstName,
+        lastName,
+        address,
+        zipCode,
+        city,
+        state,
+        email,
+        phoneNumber,
+        availability: formattedAvailability
+      })
+
+      setAlertMessage('Account was successfully created')
+      setAlertType('alert-success')
+      setTimeout(() => {
+        setAlertMessage(null)
+        navigate('/')
+      }, 5000)
+
+    } catch (exception) {
+      setAlertMessage(exception.response.data.error)
+      setAlertType('alert-error')
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000)
+    }
+  }
+
   const businessRegForm = () => {
     return (
       <BusinessRegForm
@@ -148,6 +196,39 @@ const Registration = () => {
     )
   }
 
+  const customerRegForm = () => {
+    return (
+      <CustomerRegForm
+        username={username}
+        password={password}
+        firstName={firstName}
+        lastName={lastName}
+        address={address}
+        zipCode={zipCode}
+        city={city}
+        state={state}
+        email={email}
+        phoneNumber={phoneNumber}
+        availability={availability}
+
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleFirstNameChange={({ target }) => setFirstName(target.value)}
+        handleLastNameChange={({ target }) => setLastName(target.value)}
+        handleAddressChange={({ target }) => setAddress(target.value)}
+        handleZipCodeChnage={({ target }) => setZipCode(target.value)}
+        handleCityChange={({ target }) => setCity(target.value)}
+        handleStateChange={({ target }) => setState(target.value)}
+        handleEmailChange={({ target }) => setEmail(target.value)}
+        handlePhoneNumberChange={({ target }) => setPhoneNumber(target.value)}
+        handleCheckboxChange={handleCheckboxChange}
+        handleTimeChange={handleTimeChange}
+
+        handleSubmit={handleCustomer}
+      />
+    )
+  }
+
   if (accType == null) {
     setAccType('customer');
   }
@@ -169,7 +250,7 @@ const Registration = () => {
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
           {accType === 'business' && businessRegForm()}
-          {accType === 'customer' && <CustomerRegForm />}
+          {accType === 'customer' && customerRegForm()}
         </div>
         <br></br>
         <Alert message={alertMessage} type={alertType} />
