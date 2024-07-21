@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import BusinessRegForm from "../components/BusinessRegForm"
 import CustomerRegForm from "../components/CustomerRegForm"
-import regisrationService from "../services/registration"
+import businessRegistrationService from "../services/businessregistration"
+import customerRegistrationService from "../services/customerregistration"
 import Alert from '../components/Alert'
 
 const Registration = () => {
@@ -16,9 +17,11 @@ const Registration = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
   const [businessName, setBusinessName] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+
   const [email, setEmail] = useState('')
   const [address, setAddress] = useState('')
   const [zipCode, setZipCode] = useState('')
@@ -92,7 +95,7 @@ const Registration = () => {
       }));
 
     try {
-      await registrationService.registerBusiness({
+      await businessRegistrationService.registerBusiness({
         username,
         password,
         businessName,
@@ -135,7 +138,7 @@ const Registration = () => {
     */
 
     try {
-      await registrationService.registerCustomer({
+      await customerRegistrationService.registerCustomer({
         username,
         password,
         firstName,
