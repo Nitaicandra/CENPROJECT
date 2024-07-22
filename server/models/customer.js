@@ -7,6 +7,10 @@ const customerSchema = new mongoose.Schema({
     zipCode: {type: String, required: true},
     city: {type: String, required: true},
     state: {type: String, required: true},
+    location: { 
+      type: { type: String, enum: ['Point'], required: true},
+      coordinates: { type: [Number], required: true }
+    },
     email: { type: String, required: true, unique: true },
     phoneNumber: { type: String, required: true },
     login : {
@@ -15,6 +19,8 @@ const customerSchema = new mongoose.Schema({
       required: true,
     }
 })
+
+customerSchema.index({ location: '2dsphere' });
 
 customerSchema.set('toJSON', {
     transform: (document, returnedObject) => {
