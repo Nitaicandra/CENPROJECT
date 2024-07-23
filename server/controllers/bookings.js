@@ -2,6 +2,7 @@ const bookingsRouter = require('express').Router();
 const Business = require('../models/business');
 const Customer = require('../models/customer');
 const Service = require('../models/service');
+const Booking = require('../models/booking');
 const Auth = require('../models/authentication');
 const jwt = require('jsonwebtoken');
 
@@ -62,7 +63,7 @@ bookingsRouter.post('/book-service/:serviceId', async(request, response) => {
         return response.status(403).json({ error: 'not a customer account' });
     }
 
-    const customer = await Customer.findOne({"login": {_id: decodedToken.id}});
+    const customer = await Customer.findOne({"login": {_id: decodedToken.id}}).populate('bookings');
     if (!customer){
         return response.status(404).json({ error: 'no customer account attached to this user' });
     }
@@ -73,30 +74,43 @@ bookingsRouter.post('/book-service/:serviceId', async(request, response) => {
         return response.status(404).json({ error: `no service found with id ${serviceId}` });
     }
 
-    // Retrieve booking time from request
-    const { date, weekday, startTime, endTime } = request.body;
+    const business = await Business.findById(service.provider._id).populate('bookings');
+    if (!business){
+        return response.status(404).json({ error: `no business found with id ${service.provider._id}` });
+    }
 
-    // Check if the desired time is within business hours
-    const businessHours = JSON.parse(service.provider.availability);
-    if (!isWithinBusinessHours(weekday, startTime, endTime, businessHours)){
+    const { date, weekDay, startTime, endTime } = request.body;
+
+    const businessHours = JSON.parse(business.availability);
+    if (!isWithinBusinessHours(weekDay, startTime, endTime, businessHours)){
         return response.status(400).json({ error: `cannot book outside of business hours` });
     }
 
-    // Check if desired time is available for booking 
     if (!isAvailable(date, startTime, endTime, customer.bookings)){
         return response.status(400).json({ error: `customer already has a conflicting booking` });
     }
 
-    if (!isAvailable(date, startTime, endTime, service.provider.bookings)){
+    if (!isAvailable(date, startTime, endTime, business.bookings)){
         return response.status(400).json({ error: `business is unavailable at requested times` });
     }
 
-    // create booking
-    
-    // add the booking to customer
-    // add the booking to business
+    const booking = new Booking({
+        provider: business._id,
+        customer: customer._id,
+        service: service._id,
+        date,
+        weekDay,
+        startTime,
+        endTime
+    });
 
-    response.status(200).json();
+    const savedBooking = await booking.save();
+    customer.bookings = customer.bookings.concat(savedBooking._id);
+    business.bookings = business.bookings.concat(savedBooking._id);
+    await business.save();
+    await customer.save();
+
+    response.status(201).json(savedBooking);
 })
 bookingsRouter.get('/', async(request, response) => {})
 
