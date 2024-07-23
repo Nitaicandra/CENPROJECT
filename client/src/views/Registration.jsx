@@ -11,7 +11,7 @@ const Registration = () => {
   const navigate = useNavigate();
 
   //Common states to both forms 
-  const [accType, setAccType] = useState(null)
+  const [accType, setAccType] = useState('customer')
   const [alertMessage, setAlertMessage] = useState(null)
   const [alertType, setAlertType] = useState(null)
 
@@ -228,60 +228,54 @@ const Registration = () => {
     )
   }
 
-  if (accType == null) {
-    setAccType('customer');
-  }
-
-  if (accType == 'business') {
+  const customerSelected = () => {
     return (
       <>
-        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-          <button
-            className="mr-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
-            onClick={() => onClickCustomer()} >
-            I am a customer
-          </button>
-          <button
-            className="mx-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={() => onClickBusiness()}>
-            I am a business
-          </button>
-        </div>
-        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-          {accType === 'business' && businessRegForm()}
-          {accType === 'customer' && customerRegForm()}
-        </div>
-        <br></br>
-        <Alert message={alertMessage} type={alertType} />
+        <button
+          className="mr-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          onClick={() => onClickCustomer()}>
+          I am a customer
+        </button>
+        <button
+          className="mr-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
+          onClick={() => onClickBusiness()}>
+          I am a business
+        </button></>
+    )
+  }
+
+  const businessSelected = () => {
+    return (
+      <>
+        <button
+          className="mr-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
+          onClick={() => onClickCustomer()}>
+          I am a customer
+        </button>
+        <button
+          className="mr-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          onClick={() => onClickBusiness()}>
+          I am a business
+        </button>
       </>
     )
   }
 
-  else { // if customer (default)
-    return (
-      <>
-        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-          <button
-            className="mr-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={() => onClickCustomer()} >
-            I am a customer
-          </button>
-          <button
-            className="mx-10 rounded-md bg-neutral-950 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
-            onClick={() => onClickBusiness()}>
-            I am a business
-          </button>
-        </div>
-        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-          {accType === 'business' && businessRegForm()}
-          {accType === 'customer' && <CustomerRegForm />}
-        </div>
-        <br></br>
-        <Alert message={alertMessage} type={alertType} />
-      </>
-    )
-  }
-
+  return (
+    <>
+      <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
+        {accType === 'customer' && customerSelected()}
+        {accType === 'business' && businessSelected()}
+      </div>
+      <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
+        {accType === 'customer' && customerRegForm()}
+        {accType === 'business' && businessRegForm()}
+      </div>
+      <br></br>
+      <Alert message={alertMessage} type={alertType} />
+    </>
+  )
+  
 }
 
 export default Registration
