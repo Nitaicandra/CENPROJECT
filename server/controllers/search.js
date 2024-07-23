@@ -32,13 +32,20 @@ async function getDistances(customer, services){
     }
 
     const destinationsStr = destinations.join('|');
-
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destinationsStr)}&units=imperial&key=${apiKey}`
 
     const request = await fetch(url);
     const data = await request.json();
 
-    return data;
+    let distances = [];
+
+    for(let i = 0; i < services.length; i++){
+        let d = data.rows[0].elements[i].distance.text;
+        d = extractDist(d);
+        distances.push(d);
+    }
+
+    return distances;
 
 }
 
@@ -66,23 +73,20 @@ searchRouter.get('/', async (request, response) => {
         return response.status(404).json({ error: 'no customer account attached to this user' });
     }
 
-    let query = request.query.query
-    const regex = new RegExp(query, 'i') //case-insensitive, includes partial matches
+    let query = request.query.query;
+    const regex = new RegExp(query, 'i'); //case-insensitive, includes partial matches
 
     let services = await Service.find({
         serviceName: regex,
-    }).populate('provider')
+    }).populate('provider');
 
-    const data = await getDistances(customer, services)
-    console.log(data)
+    const distances = await getDistances(customer, services);
 
     let results = []
     for(let i = 0; i < services.length; i++){
-        let d = data.rows[0].elements[i].distance.text
-        d = extractDist(d)
-
+        let d = distances[i]
         if (d > 10 || !d){
-            continue
+            continue;
         }
 
         results.push(
@@ -96,8 +100,8 @@ searchRouter.get('/', async (request, response) => {
                 avgRating: services[i].provider.avgRating,
                 distance: d
             }
-        )
-        d++
+        );
+        d++;
     }
 
     response.status(200).json(results);
