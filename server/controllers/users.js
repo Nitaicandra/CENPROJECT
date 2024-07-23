@@ -50,7 +50,7 @@ async function validateAddress(street, city, state, zipCode) {
     // This is because the API may auto correct / approximate the input address to a different location
     const validatedAddr = lookupResult.result[0]
     const components = validatedAddr.components;
-    if (components.zipCode !== zipCode || components.cityName !== city || components.state !== state) {
+    if (components.zipCode !== zipCode || components.cityName.toLowerCase() !== city.toLowerCase() || components.state !== state) {
       console.log('invalid zipcode, city, and/or state');
       return {};
     }
