@@ -23,11 +23,11 @@ function extractDist(d){
 }
 
 async function getDistances(customer, services){
-    const origin = `${customer.location.coordinates[1]},${customer.location.coordinates[0]}`;
+    const origin = `${customer.address},${customer.city},${customer.state},${customer.zipCode}`;
     let destinations = [];
 
     for (let service of services){
-        const dest = `${service.provider.location.coordinates[1]},${service.provider.location.coordinates[0]}`;
+        const dest = `${service.provider.address},${service.provider.city},${service.provider.state},${service.provider.zipCode}`;
         destinations.push(dest);
     }
 
@@ -38,7 +38,6 @@ async function getDistances(customer, services){
     const data = await request.json();
 
     let distances = [];
-
     for(let i = 0; i < services.length; i++){
         let d = data.rows[0].elements[i].distance.text;
         d = extractDist(d);
@@ -52,7 +51,6 @@ async function getDistances(customer, services){
 searchRouter.get('/', async (request, response) => {
     // Search by a query parameter
     // Returns all services offered by businesses within 10 miles of the logged-in customer
-    // Distance is an approximated value
     const token = getTokenFrom(request)
     if (!token) {
         return response.status(401).json({ error: 'user is not logged in' });

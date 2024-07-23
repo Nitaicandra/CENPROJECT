@@ -59,9 +59,7 @@ async function validateAddress(street, city, state, zipCode) {
       street: validatedAddr.deliveryLine1,
       city: validatedAddr.components.cityName,
       state: validatedAddr.components.state,
-      zipCode: validatedAddr.components.zipCode,
-      latitude: validatedAddr.metadata.latitude,
-      longitude: validatedAddr.metadata.longitude
+      zipCode: validatedAddr.components.zipCode
     };
 
   } catch (error) {
@@ -98,10 +96,6 @@ usersRouter.post('/businesses', async (request, response) => {
     zipCode: validAddress.zipCode,
     city: validAddress.city,
     state: validAddress.state,
-    location: {
-      type: 'Point',
-      coordinates: [validAddress.longitude, validAddress.latitude]
-    },
     email,
     phoneNumber,
     availability: avStr,
@@ -141,10 +135,6 @@ usersRouter.post('/customers', async (request, response) => {
     zipCode: validAddress.zipCode,
     city: validAddress.city,
     state: validAddress.state,
-    location: {
-      type: 'Point',
-      coordinates: [validAddress.longitude, validAddress.latitude]
-    },
     email,
     phoneNumber,
     login: login._id

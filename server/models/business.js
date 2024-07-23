@@ -6,10 +6,6 @@ const businessSchema = new mongoose.Schema({
     zipCode: {type: String, required: true},
     city: {type: String, required: true},
     state: {type: String, required: true},
-    location: { 
-      type: { type: String, enum: ['Point'], required: true},
-      coordinates: { type: [Number], required: true }
-    },
     email: { type: String, required: true, unique: true },
     phoneNumber: { type: String, required: true },
     availability: [{ type: String, required: true }],
@@ -28,8 +24,6 @@ const businessSchema = new mongoose.Schema({
       ref: 'Service',
     }]
   })
-
-  businessSchema.index({ location: '2dsphere' });
 
   businessSchema.set('toJSON', {
     transform: (document, returnedObject) => {
