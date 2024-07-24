@@ -149,4 +149,40 @@ bookingsRouter.get('/future', async (request, response) => {
     response.status(200).json(upcomingBookings);
 })
 
+bookingsRouter.get('/past', async (request, response) => {
+    // Get all past bookings of the logged-in user
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Auth.findById(decodedToken.id);
+    let account
+
+    if (user.accType !== 'business' && user.accType !== 'customer') {
+        return response.status(403).json({ error: 'not a customer nor business account' });
+    }
+
+    if (user.accType === 'business') {
+        account = await Business.findOne({ "login": { _id: decodedToken.id } }).populate('bookings');
+    } else {
+        account = await Customer.findOne({ "login": { _id: decodedToken.id } }).populate('bookings');
+    }
+
+    let today = new Date();
+    today = today.toISOString().split('T')[0];
+
+    let upcomingBookings = [];
+    for (const booking of account.bookings) {
+        if (booking.date < today) { upcomingBookings.push(booking) }
+    }
+
+    response.status(200).json(upcomingBookings);
+})
+
 module.exports = bookingsRouter;
