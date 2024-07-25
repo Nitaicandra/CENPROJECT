@@ -30,6 +30,6 @@ app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/services', servicesRouter);
 app.use('/api/bookings', bookingsRouter);
-app.use('/api/reviews', bookingsRouter);
+app.use('/api/reviews', reviewsRouter);
 
 module.exports = app;
