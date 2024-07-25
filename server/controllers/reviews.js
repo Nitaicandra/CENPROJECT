@@ -49,7 +49,7 @@ reviewsRouter.post('/:bookingId', async (request, response) => {
         return response.status(400).json({ error: `booking already has a review`});
     }
 
-    if (booking.customer._id !== customer._id){
+    if (booking.customer._id.toString() !== customer._id.toString()){
         return response.status(403).json({ error: `cannot leave a review for someone else's booking`});
     }
 
@@ -86,8 +86,69 @@ reviewsRouter.post('/:bookingId', async (request, response) => {
     response.status(201).json(savedReview);
 })
 
-//reviewsRouter.post('/reply/reviewId', async (request, response) => {})
+reviewsRouter.put('/reply/:reviewId', async (request, response) => {
+    // Allows a business to reply to a review left by a customer for a service
+    // business can only reply once per booking
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
 
-//reviewsRouter.get('/businessId', async (request, response) => {})
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Auth.findById(decodedToken.id);
+    if (user.accType !== 'business') {
+        return response.status(403).json({ error: 'not a business account' });
+    }
+
+    const business = await Business.findOne({ "login": { _id: decodedToken.id } });
+    if (!business) {
+        return response.status(404).json({ error: 'no business account attached to this user' });
+    }
+
+    const reviewId = request.params.reviewId;
+    const review = await Review.findById(reviewId);
+    if (!review) {
+        return response.status(404).json({ error: `no review found with id ${reviewId}`});
+    }
+
+    if(review.provider._id.toString() !== business._id.toString()){
+        return response.status(403).json({ error: 'cannot reply to a review for another business' });
+    }
+
+    const {reply} = request.body;
+    review.reply = reply;
+    const updatedReview = await review.save();
+
+    response.status(200).json(updatedReview);
+})
+
+reviewsRouter.get('/business', async (request, response) => {
+    // Gets all reviews left for logged-in business
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Auth.findById(decodedToken.id);
+    if (user.accType !== 'business') {
+        return response.status(403).json({ error: 'not a business account' });
+    }
+
+    const business = await Business.findOne({ "login": { _id: decodedToken.id } }).populate('reviews');
+    if (!business) {
+        return response.status(404).json({ error: 'no business account attached to this user' });
+    }
+
+    response.status(200).json(business.reviews);
+})
 
 module.exports = reviewsRouter;
