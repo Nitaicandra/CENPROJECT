@@ -13,7 +13,11 @@ const customerSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Authentication',
       required: true,
-    }
+    },
+    bookings: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Booking',
+    }]
 })
 
 customerSchema.set('toJSON', {

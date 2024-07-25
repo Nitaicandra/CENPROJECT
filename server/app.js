@@ -7,7 +7,8 @@ const url = process.env.MONGODB_URI
 
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
-const servicesRouter = require('./controllers/services')
+const servicesRouter = require('./controllers/services');
+const bookingsRouter = require('./controllers/bookings');
 
 console.log('connecting to', url)
 
@@ -27,5 +28,6 @@ app.use(express.json());
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/services', servicesRouter);
+app.use('/api/bookings', bookingsRouter);
 
 module.exports = app;
