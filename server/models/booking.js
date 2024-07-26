@@ -25,6 +25,13 @@ const bookingSchema = new mongoose.Schema({
         enum: ['completed', 'cancelled', 'active'],
         default: 'active'
     },
+    price: {
+        type: mongoose.Types.Decimal128,
+        required: true,
+        min: 0,
+        get: v => v.toString(),
+        set: v => mongoose.Types.Decimal128.fromString(v)
+    },
     discount: {type: Number, min: 0, max: 100, default: 0}
   }, { timestamps: true } )
 

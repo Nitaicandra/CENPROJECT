@@ -101,7 +101,8 @@ bookingsRouter.post('/book-service/:serviceId', async (request, response) => {
         date,
         weekDay,
         startTime,
-        endTime
+        endTime,
+        price: service.price
     });
 
     const savedBooking = await booking.save();
@@ -111,6 +112,61 @@ bookingsRouter.post('/book-service/:serviceId', async (request, response) => {
     await customer.save();
 
     response.status(201).json(savedBooking);
+})
+
+bookingsRouter.delete('/:bookingId', async (request, response) => {
+    // Allows a business to delete a booking
+    // Can only delete bookings in the future (same day and prior is not allowed)
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Auth.findById(decodedToken.id);
+    if (user.accType !== 'business') {
+        return response.status(403).json({ error: 'not a business account' });
+    }
+
+    const business = await Business.findOne({ "login": { _id: decodedToken.id } });
+    if (!business) {
+        return response.status(404).json({ error: 'no business account attached to this user' });
+    }
+
+    const bookingId = request.params.bookingId;
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+        return response.status(404).json({ error: `no booking found with id ${bookingId}` });
+    }
+
+    if (business._id.toString() !== booking.provider._id.toString()){
+        return response.status(403).json({ error: 'user is unauthorized to delete this booking' });
+    }
+
+    let today = new Date();
+    today = today.toISOString().split('T')[0];
+
+    if (business.date <= today){
+        return response.status(403).json({ error: 'cannot delete past nor same-day bookings' });
+    }
+    
+    await booking.deleteOne();
+   
+    await Business.updateOne(
+        { _id: business._id },
+        { $pull: { bookings: bookingId } }
+    );
+
+    await Customer.updateOne(
+        { _id: booking.customer._id },
+        { $pull: { bookings: bookingId } }
+    );
+
+    response.status(200).json();
 })
 
 bookingsRouter.get('/future', async (request, response) => {
