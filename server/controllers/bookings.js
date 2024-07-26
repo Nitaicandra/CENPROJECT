@@ -216,13 +216,11 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
 
     if (!discount){
         // modify time only
-        console.log('wrong wrong if block')
         booking.startTime = startTime;
         booking.endTime = endTime;
 
     } else if(!startTime || !endTime){
         // modify discount only (and update price)
-        console.log('correct if block')
         booking.discount = discount;
         drate = parseInt(discount) / 100;
         price = booking.service.price * (1 - drate);
@@ -230,7 +228,6 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
 
     } else {
         // modify both
-        console.log('wrong if block')
         booking.startTime = startTime;
         booking.endTime = endTime;
 
@@ -271,11 +268,12 @@ bookingsRouter.get('/future', async (request, response) => {
     }
 
     let today = new Date();
+    now = today.toISOString().split('T')[1].slice(0,-8);
     today = today.toISOString().split('T')[0];
 
     let upcomingBookings = [];
     for (const booking of account.bookings) {
-        if (booking.date >= today) { upcomingBookings.push(booking) }
+        if ((booking.date > today) || (booking.date == today && booking.startTime > now)) { upcomingBookings.push(booking) }
     }
 
     response.status(200).json(upcomingBookings);
