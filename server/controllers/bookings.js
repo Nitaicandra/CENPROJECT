@@ -150,7 +150,7 @@ bookingsRouter.delete('/:bookingId', async (request, response) => {
     let today = new Date();
     today = today.toISOString().split('T')[0];
 
-    if (business.date <= today){
+    if (booking.date <= today){
         return response.status(403).json({ error: 'cannot delete past nor same-day bookings' });
     }
     
@@ -167,6 +167,82 @@ bookingsRouter.delete('/:bookingId', async (request, response) => {
     );
 
     response.status(200).json();
+})
+
+bookingsRouter.put('/edit/:bookingId', async (request, response) => {
+    // Allows a business to modify times and/or include discounts for a booking
+    // booking must be in the future
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Auth.findById(decodedToken.id);
+    if (user.accType !== 'business') {
+        return response.status(403).json({ error: 'not a business account' });
+    }
+
+    const business = await Business.findOne({ "login": { _id: decodedToken.id } });
+    if (!business) {
+        return response.status(404).json({ error: 'no business account attached to this user' });
+    }
+
+    const bookingId = request.params.bookingId;
+    const booking = await Booking.findById(bookingId).populate('service');
+    if (!booking) {
+        return response.status(404).json({ error: `no booking found with id ${bookingId}` });
+    }
+
+    if (business._id.toString() !== booking.provider._id.toString()){
+        return response.status(403).json({ error: 'user is unauthorized to modify this booking' });
+    }
+
+    let today = new Date();
+    now = today.toISOString().split('T')[1].slice(0,-8);
+    today = today.toISOString().split('T')[0];
+
+    if ((booking.date < today) || (booking.date == today && booking.startTime < now)){
+        console.log(now);
+        console.log(booking.startTime)
+        return response.status(403).json({ error: 'cannot modify past bookings' });
+    }
+
+    const {startTime, endTime, discount} = request.body;
+
+    if (!discount){
+        // modify time only
+        console.log('wrong wrong if block')
+        booking.startTime = startTime;
+        booking.endTime = endTime;
+
+    } else if(!startTime || !endTime){
+        // modify discount only (and update price)
+        console.log('correct if block')
+        booking.discount = discount;
+        drate = parseInt(discount) / 100;
+        price = booking.service.price * (1 - drate);
+        booking.price = price.toString();
+
+    } else {
+        // modify both
+        console.log('wrong if block')
+        booking.startTime = startTime;
+        booking.endTime = endTime;
+
+        booking.discount = discount;
+        drate = parseInt(discount) / 100;
+        price = booking.service.price * (1 - drate);
+        booking.price = price.toString();
+    }
+
+    const updatedBooking = await booking.save();
+
+    response.status(200).json(updatedBooking);
 })
 
 bookingsRouter.get('/future', async (request, response) => {
