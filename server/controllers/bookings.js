@@ -33,8 +33,10 @@ const isAvailable = (date, startTime, endTime, bookings) => {
     let available = true;
     if (bookings.length === 0) { return available; }
 
-    const bookingsOnDate = bookings.filter(booking => booking.date === date);
-    if (bookingsOnDate.length === 0) { return available; }
+    const bookingsOnDate = bookings.filter(booking => booking.date === date );
+    if (bookingsOnDate.length === 0) { 
+        console.log("did not match date conflict check ", date)
+        return available; }
 
     for (const booking of bookingsOnDate) {
         if (endTime >= booking.startTime && startTime <= booking.endTime) {
@@ -87,7 +89,7 @@ bookingsRouter.post('/book-service/:serviceId', async (request, response) => {
     }
 
     if (!isAvailable(date, startTime, endTime, customer.bookings)) {
-        return response.status(400).json({ error: `customer already has a conflicting booking` });
+        return response.status(400).json({ error: `customer has a conflicting booking` });
     }
 
     if (!isAvailable(date, startTime, endTime, business.bookings)) {
@@ -143,19 +145,19 @@ bookingsRouter.delete('/:bookingId', async (request, response) => {
         return response.status(404).json({ error: `no booking found with id ${bookingId}` });
     }
 
-    if (business._id.toString() !== booking.provider._id.toString()){
+    if (business._id.toString() !== booking.provider._id.toString()) {
         return response.status(403).json({ error: 'user is unauthorized to delete this booking' });
     }
 
     let today = new Date();
     today = today.toISOString().split('T')[0];
 
-    if (booking.date <= today){
+    if (booking.date <= today) {
         return response.status(403).json({ error: 'cannot delete past nor same-day bookings' });
     }
-    
+
     await booking.deleteOne();
-   
+
     await Business.updateOne(
         { _id: business._id },
         { $pull: { bookings: bookingId } }
@@ -187,7 +189,7 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
         return response.status(403).json({ error: 'not a business account' });
     }
 
-    const business = await Business.findOne({ "login": { _id: decodedToken.id } });
+    const business = await Business.findOne({ "login": { _id: decodedToken.id } }).populate('bookings');
     if (!business) {
         return response.status(404).json({ error: 'no business account attached to this user' });
     }
@@ -198,7 +200,7 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
         return response.status(404).json({ error: `no booking found with id ${bookingId}` });
     }
 
-    if (business._id.toString() !== booking.provider._id.toString()){
+    if (business._id.toString() !== booking.provider._id.toString()) {
         return response.status(403).json({ error: 'user is unauthorized to modify this booking' });
     }
 
@@ -206,31 +208,34 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
     let now = today.toTimeString().split(' ')[0].slice(0, 5);
     today = today.toISOString().split('T')[0];
 
-    if ((booking.date < today) || (booking.date == today && booking.startTime < now)){
+    if ((booking.date < today) || (booking.date == today && booking.startTime < now)) {
         console.log(now);
         console.log(booking.startTime)
         return response.status(403).json({ error: 'cannot modify past bookings' });
     }
 
-    const {startTime, endTime, discount} = request.body;
+    const { startTime, endTime, discount } = request.body;
+    const customer = await Customer.findById(booking.customer._id).populate('bookings');
+    const businessHours = JSON.parse(business.availability);
 
-    if (!discount){
-        // modify time only
+    if (startTime && endTime){
+        if (!isWithinBusinessHours(booking.weekDay, startTime, endTime, businessHours)) {
+            return response.status(400).json({ error: `cannot book outside of business hours` });
+        }
+
+        if (!isAvailable(booking.date, startTime, endTime, business.bookings)) {
+            return response.status(400).json({ error: `business is unavailable at requested times` });
+        }
+
+        if (!isAvailable(booking.date, startTime, endTime, customer.bookings)) {
+            return response.status(400).json({ error: `customer has a conflicting booking` });
+        }
+
         booking.startTime = startTime;
         booking.endTime = endTime;
+    }
 
-    } else if(!startTime || !endTime){
-        // modify discount only (and update price)
-        booking.discount = discount;
-        drate = parseInt(discount) / 100;
-        price = booking.service.price * (1 - drate);
-        booking.price = price.toString();
-
-    } else {
-        // modify both
-        booking.startTime = startTime;
-        booking.endTime = endTime;
-
+    if (discount){
         booking.discount = discount;
         drate = parseInt(discount) / 100;
         price = booking.service.price * (1 - drate);
@@ -238,7 +243,6 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
     }
 
     const updatedBooking = await booking.save();
-
     response.status(200).json(updatedBooking);
 })
 
