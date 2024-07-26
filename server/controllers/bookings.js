@@ -203,7 +203,7 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
     }
 
     let today = new Date();
-    now = today.toISOString().split('T')[1].slice(0,-8);
+    let now = today.toTimeString().split(' ')[0].slice(0, 5);
     today = today.toISOString().split('T')[0];
 
     if ((booking.date < today) || (booking.date == today && booking.startTime < now)){
@@ -268,7 +268,7 @@ bookingsRouter.get('/future', async (request, response) => {
     }
 
     let today = new Date();
-    now = today.toISOString().split('T')[1].slice(0,-8);
+    let now = today.toTimeString().split(' ')[0].slice(0, 5);
     today = today.toISOString().split('T')[0];
 
     let upcomingBookings = [];
@@ -305,14 +305,15 @@ bookingsRouter.get('/past', async (request, response) => {
     }
 
     let today = new Date();
+    let now = today.toTimeString().split(' ')[0].slice(0, 5);
     today = today.toISOString().split('T')[0];
 
-    let upcomingBookings = [];
+    let pastBookings = [];
     for (const booking of account.bookings) {
-        if (booking.date < today) { upcomingBookings.push(booking) }
+        if ((booking.date < today) || (booking.date == today && booking.startTime < now)) { pastBookings.push(booking) }
     }
 
-    response.status(200).json(upcomingBookings);
+    response.status(200).json(pastBookings);
 })
 
 module.exports = bookingsRouter;
