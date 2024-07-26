@@ -119,6 +119,10 @@ reviewsRouter.put('/reply/:reviewId', async (request, response) => {
         return response.status(403).json({ error: 'cannot reply to a review for another business' });
     }
 
+    if (review.reply){
+        return response.status(400).json({ error: 'review already has a reply' });
+    }
+
     const {reply} = request.body;
     review.reply = reply;
     const updatedReview = await review.save();
