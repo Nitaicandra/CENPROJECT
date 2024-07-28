@@ -22,8 +22,16 @@ const businessSchema = new mongoose.Schema({
     services: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Service',
+    }],
+    bookings: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Booking',
+    }],
+    reviews: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review',
     }]
-  })
+})
 
   businessSchema.set('toJSON', {
     transform: (document, returnedObject) => {

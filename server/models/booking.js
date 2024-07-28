@@ -16,12 +16,20 @@ const bookingSchema = new mongoose.Schema({
         ref: 'Service',
         required: true,
     },
-    time: {type: Date, required: true},
+    date: {type: String, required: true},
+    weekDay: {type: String, required: true},
+    startTime: {type: String, required: true},
+    endTime: {type: String, required: true},
     status: {
         type: String, 
         enum: ['completed', 'cancelled', 'active'],
         default: 'active'
-    }
+    },
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+    },
+    discount: {type: Number, min: 0, max: 100, default: 0}
   }, { timestamps: true } )
 
 module.exports = mongoose.model('Booking', bookingSchema, 'bookings')

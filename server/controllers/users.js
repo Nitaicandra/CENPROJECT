@@ -68,25 +68,37 @@ async function validateAddress(street, city, state, zipCode) {
 }
 
 usersRouter.post('/businesses', async (request, response) => {
-  // Post a new business user account
-  const { username, password } = request.body;
-  if (!password || !username) {
-    return response.status(400).json({ error: 'a username and password are required' });
-  }
+    // Post a new business user account
+    const { username, password, businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
+    
+    // check for username / password first
+    if (!password || !username) {
+      return response.status(400).json({ error: 'a username and password are required' });
+    }
 
-  const { businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
-  if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
-    return response.status(400).json({ error: 'missing field(s) when creating a business account' });
-  }
+    // checks for missing fields
+    if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
+      return response.status(400).json({ error: 'missing field(s) when creating a business account' });
+    }
 
-  const validAddress = await validateAddress(address, city, state, zipCode);
+    // checks for existing username / email
+    const existingUser = await Authentication.findOne({ username });
+    if (existingUser) {
+      return response.status(400).json({ error: 'username already exists, please select another' });
+    }
+    const existingEmail = await Business.findOne({ email });
+    if (existingEmail) {
+      return response.status(400).json({ error: 'email is associated with existing account, please select another' });
+    }
+
+    const type = 'business'
+    const login = await createAuth(type, username, password);
+
+    const validAddress = await validateAddress(address, city, state, zipCode);
 
   if (Object.keys(validAddress).length === 0) {
     return response.status(400).json({ error: 'invalid address' });
   }
-
-  const type = 'business'
-  const login = await createAuth(type, username, password);
 
   avStr = JSON.stringify(availability)
 
@@ -109,24 +121,36 @@ usersRouter.post('/businesses', async (request, response) => {
 
 usersRouter.post('/customers', async (request, response) => {
   // Post a new customer user account
-  const { username, password } = request.body;
+  const { username, password, firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
+
+  // check for username / password first
   if (!password || !username) {
     return response.status(400).json({ error: 'a username and password are required' });
   }
 
-  const { firstName, lastName, address, zipCode, city, state, email, phoneNumber } = request.body;
-  if (!firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {
+  // checks for missing fields
+  if ( !firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {
     return response.status(400).json({ error: 'missing field(s) when creating a customer account' });
   }
+
+  // checks for existing username / email
+  const existingUser = await Authentication.findOne({ username });
+  if (existingUser) {
+    return response.status(400).json({ error: 'username already exists, please select another' });
+  }
+  const existingEmail = await Customer.findOne({ email });
+  if (existingEmail) {
+    return response.status(400).json({ error: 'email is associated with existing account, please select another' });
+  }
+
+  const type = 'customer'
+  const login = await createAuth(type, username, password);
 
   const validAddress = await validateAddress(address, city, state, zipCode);
 
   if (Object.keys(validAddress).length === 0) {
     return response.status(400).json({ error: 'invalid address' });
   }
-
-  const type = 'customer'
-  const login = await createAuth(type, username, password);
 
   const user = new Customer({
     firstName,

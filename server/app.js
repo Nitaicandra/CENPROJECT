@@ -8,8 +8,10 @@ const url = process.env.MONGODB_URI
 
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
-const servicesRouter = require('./controllers/services')
+const servicesRouter = require('./controllers/services');
 const searchRouter = require('./controllers/search')
+const bookingsRouter = require('./controllers/bookings');
+const reviewsRouter = require('./controllers/reviews');
 
 console.log('connecting to', url)
 
@@ -30,5 +32,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/services', servicesRouter);
 app.use('/api/search', searchRouter)
+app.use('/api/bookings', bookingsRouter);
+app.use('/api/reviews', reviewsRouter);
 
 module.exports = app;
