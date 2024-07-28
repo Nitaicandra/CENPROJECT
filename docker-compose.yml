@@ -17,6 +17,9 @@ services:
       - DB_NAME=$MONGODB_DATABASE
       - DB_PORT=27017
       - MONGODB_URI=$MONGODB_URI
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     depends_on:
       - mongodb
 
@@ -48,6 +51,8 @@ services:
 
     volumes:
       - ./server/models/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
 # Volumes
 volumes: 
