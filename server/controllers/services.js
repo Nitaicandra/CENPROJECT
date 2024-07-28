@@ -83,7 +83,7 @@ servicesRouter.get('/:serviceId', async(request, response) => {
     }
 
     const serviceId = request.params.serviceId;
-    const service = await Service.findById(serviceId).populate('provider', {_id: 1, businessName: 1, avgRating: 1})
+    const service = await Service.findById(serviceId).populate('provider')
     if (!service){
         return response.status(404).json({ error: `no service found with id ${serviceId}` });
     }
