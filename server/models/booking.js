@@ -25,6 +25,10 @@ const bookingSchema = new mongoose.Schema({
         enum: ['completed', 'cancelled', 'active'],
         default: 'active'
     },
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+    },
     discount: {type: Number, min: 0, max: 100, default: 0}
   }, { timestamps: true } )
 
