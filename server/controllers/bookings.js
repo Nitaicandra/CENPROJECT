@@ -29,16 +29,19 @@ const isWithinBusinessHours = (weekday, startTime, endTime, businessHours) => {
     return valid;
 }
 
-const isAvailable = (date, startTime, endTime, bookings) => {
+const isAvailable = (date, startTime, endTime, bookings, bookingId = '') => {
     let available = true;
     if (bookings.length === 0) { return available; }
 
     const bookingsOnDate = bookings.filter(booking => booking.date === date );
     if (bookingsOnDate.length === 0) { 
-        console.log("did not match date conflict check ", date)
         return available; }
 
     for (const booking of bookingsOnDate) {
+        if (bookingId && booking._id.toString() === bookingId.toString()){
+            continue;
+        }
+
         if (endTime >= booking.startTime && startTime <= booking.endTime) {
             available = false;
             break;
@@ -223,11 +226,11 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
             return response.status(400).json({ error: `cannot book outside of business hours` });
         }
 
-        if (!isAvailable(booking.date, startTime, endTime, business.bookings)) {
+        if (!isAvailable(booking.date, startTime, endTime, business.bookings, booking._id)) {
             return response.status(400).json({ error: `business is unavailable at requested times` });
         }
 
-        if (!isAvailable(booking.date, startTime, endTime, customer.bookings)) {
+        if (!isAvailable(booking.date, startTime, endTime, customer.bookings, booking._id)) {
             return response.status(400).json({ error: `customer has a conflicting booking` });
         }
 
