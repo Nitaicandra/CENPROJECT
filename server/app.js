@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const express = require('express');
 
+
 const app = express();
 const cors = require('cors');
 const url = process.env.MONGODB_URI
@@ -8,6 +9,7 @@ const url = process.env.MONGODB_URI
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const servicesRouter = require('./controllers/services');
+const searchRouter = require('./controllers/search')
 const bookingsRouter = require('./controllers/bookings');
 const reviewsRouter = require('./controllers/reviews');
 
@@ -29,6 +31,7 @@ app.use(express.json());
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/services', servicesRouter);
+app.use('/api/search', searchRouter)
 app.use('/api/bookings', bookingsRouter);
 app.use('/api/reviews', reviewsRouter);
 

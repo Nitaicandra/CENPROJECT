@@ -3,14 +3,7 @@ const Business = require('../models/business');
 const Auth = require('../models/authentication');
 const Service = require('../models/service');
 const jwt = require('jsonwebtoken');
-
-const getTokenFrom = request => {
-    const authorization = request.get('authorization')
-    if (authorization && authorization.startsWith('Bearer ')) {
-        return authorization.replace('Bearer ', '');
-    }
-    return null
-}
+const { getTokenFrom } = require('./utils/helpers')
 
 servicesRouter.post('/', async(request, response) => {
     // Creates a new service for the logged in user iff the user is a business
