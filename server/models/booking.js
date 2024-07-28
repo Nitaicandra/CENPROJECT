@@ -32,6 +32,10 @@ const bookingSchema = new mongoose.Schema({
         get: v => v.toString(),
         set: v => mongoose.Types.Decimal128.fromString(v)
     },
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review',
+    },
     discount: {type: Number, min: 0, max: 100, default: 0}
   }, { timestamps: true } )
 
