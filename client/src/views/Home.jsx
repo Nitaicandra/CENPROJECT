@@ -1,15 +1,46 @@
-import  React, { useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../components/UserContext';
 
+import CustomerHome from '../components/CustomerHome';
+
 const Home = () => {
     const { user } = useContext(UserContext);
+    const navigate = useNavigate();
 
-    return(
-        <div className="mt-10 sm:mx-auto sm:w-full md:max-w-2xl">
-            This is the home page :D <br />
+    const [query, setQuery] = useState('');
+
+    const handleSearch = () => {
+        if (query.trim() !== '') {
+            navigate(`/search?query=${encodeURIComponent(query)}`);
+        }
+    }
+
+    const Customer = () => {
+        console.log(JSON.stringify(user))
+        return (
+            <CustomerHome
+                user={user}
+                handleQueryChange={({ target }) => setQuery(target.value)}
+                handleSearch={handleSearch}
+            />
+        )
+    }
+
+    const Business = () => {
+        return (
+            ""
+        )
+    }
+
+    return (
+        <div className="">
             {user ? (
-                <div>Welcome, {user.username}</div>
+                user.type === 'customer' ? (
+                    Customer()
+                ) : (
+                    Business()
+                )           
             ) : (
                 <div>No user logged in</div>
             )}
