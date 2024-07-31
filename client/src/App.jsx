@@ -5,6 +5,7 @@ import Registration from './views/Registration'
 import CreateService from './views/CreateService'
 import Home from './views/Home'
 import Search from './views/Search'
+import Service from './views/Service'
 
 
 const App = () => {
@@ -15,8 +16,9 @@ const App = () => {
           <Route exact path='/' element={<Login/>} />
           <Route exact path='/register' element={<Registration/>} />
           <Route exact path='/create-service' element={<CreateService/>} />
-          <Route exact path='/home' element={<Home/>} />
+          <Route exact path='/home' element={<Home />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/service/:serviceId" element={<Service />} />
         </Routes>
       </Router>
     </>

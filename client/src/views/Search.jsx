@@ -1,11 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import SearchService from '../services/search'
 import Alert from '../components/Alert'
 
 const Search = () => {
-    const location = useLocation();
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const [results, setResults] = useState([]);
     const [alertMessage, setAlertMessage] = useState(null)
@@ -35,6 +36,7 @@ const Search = () => {
 
     const onClickDetails = (serviceId) => {
         console.log(serviceId)
+        navigate(`/service/${serviceId}`)
     }
 
     return (
