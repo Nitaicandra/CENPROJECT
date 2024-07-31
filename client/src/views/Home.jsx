@@ -35,7 +35,6 @@ const Home = () => {
     }
 
     const onClickDelete = async (bookingId) => {
-        //event.preventDefault()
         try{
             await BookingService.deleteBooking(bookingId)
             setAlertMessage('Booking has been deleted')
@@ -59,6 +58,12 @@ const Home = () => {
         )
     }
 
+    const onClickNewService = () => {
+        return(
+            navigate('/create-service')
+        )
+    }
+
     const Customer = () => {
         return (
             <CustomerHome
@@ -77,6 +82,7 @@ const Home = () => {
                 bookings={bookings}
                 onClickDelete={onClickDelete}
                 onClickEdit={onClickEdit}
+                onClickNewService={onClickNewService}
             />
         )
     }

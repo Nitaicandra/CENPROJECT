@@ -2,18 +2,25 @@ const BusinessHome = ({
     user,
     onClickDelete,
     onClickEdit,
+    onClickNewService,
     bookings
 }) => {
     return (
-            <div className="min-h-full">
-                <header className="bg-white shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Welcome, <span>&nbsp; </span> {user.username}</h1>
-                    </div>
-                </header>
-                <main>
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        <h2 className="mt-9 text-base font-semibold leading-7 text-gray-900" >Your Upcoming Bookings </h2>
+        <div className="min-h-full">
+            <header className="bg-white shadow">
+                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Welcome, <span>&nbsp; </span> {user.username}</h1>
+                </div>
+            </header>
+            <main>
+                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <button
+                        className="mr-10 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        onClick={onClickNewService}>
+                        Create A New Service
+                    </button>
+                    <h2 className="mt-9 text-base font-semibold leading-7 text-gray-900" >Your Upcoming Bookings </h2>
+                    <div className="flex flex-wrap gap-3">
                         {bookings.length > 0 ? (
                             bookings.map((booking, index) => (
                                 <div key={index} className="my-5 max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -39,8 +46,9 @@ const BusinessHome = ({
                             <p> No upcoming bookings :( </p>
                         )}
                     </div>
-                </main >
-            </div >
+                </div>
+            </main >
+        </div >
     )
 }
 
