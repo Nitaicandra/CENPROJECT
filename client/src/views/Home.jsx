@@ -20,6 +20,7 @@ const Home = () => {
     useEffect(() => {
         if (!user){
             navigate('/')
+            return
         }
         async function fetchData() {
             const b = await BookingService.getBookings()

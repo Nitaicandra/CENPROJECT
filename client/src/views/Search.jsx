@@ -35,7 +35,6 @@ const Search = () => {
     }
 
     const onClickDetails = (serviceId) => {
-        console.log(serviceId)
         navigate(`/service/${serviceId}`)
     }
 
