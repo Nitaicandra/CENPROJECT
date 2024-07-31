@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 import { UserContext } from '../components/UserContext'
 
 import CustomerHome from '../components/CustomerHome'
+import BusinessHome from '../components/BusinessHome'
 import BookingService from '../services/booking'
 
 const Home = () => {
@@ -13,8 +14,11 @@ const Home = () => {
     const [bookings, setBookings] = useState([])
 
     useEffect(() => {
+        if (!user){
+            navigate('/')
+        }
         async function fetchData() {
-            let b = await BookingService.getCustomerBookings()
+            const b = await BookingService.getBookings()
             setBookings(b)
         }
         fetchData()
@@ -24,6 +28,16 @@ const Home = () => {
         if (query.trim() !== '') {
             navigate(`/search?query=${encodeURIComponent(query)}`);
         }
+    }
+
+    const onClickDelete = async (bookingId) => {
+        
+    }
+
+    const onClickEdit = (bookingId) => {
+        return (
+            navigate(`/edit/${bookingId}`)
+        )
     }
 
     const Customer = () => {
@@ -39,12 +53,18 @@ const Home = () => {
 
     const Business = () => {
         return (
-            ""
+            <BusinessHome
+                user={user}
+                bookings={bookings}
+                onClickDelete={{onClickDelete}}
+                onClickEdit={onClickEdit}
+            />
         )
     }
 
     return (
         <div className="">
+            
             {user ? (
                 user.type === 'customer' ? (
                     Customer()
@@ -52,7 +72,7 @@ const Home = () => {
                     Business()
                 )           
             ) : (
-                <div>No user logged in</div>
+                <Navigate to="/" />
             )}
         </div>
     )

@@ -16,7 +16,7 @@ const createBooking = async (booking, serviceId) => {
     return response.data
   }
 
-const getCustomerBookings = async () => {
+const getBookings = async () => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
     const user = JSON.parse(loggedUserJSON)
 
@@ -30,4 +30,20 @@ const getCustomerBookings = async () => {
     return response.data 
 }
 
-export default { createBooking, getCustomerBookings }
+const editBooking = async (data, bookingId) => {
+  const loggedUserJSON = window.localStorage.getItem('loggedInUser')
+  const user = JSON.parse(loggedUserJSON)
+
+  const token = `Bearer ${user.token}`
+
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.put(`api/bookings/edit/${bookingId}`, data, config)
+  return response.data 
+}
+
+
+
+export default { createBooking, getBookings, editBooking }
