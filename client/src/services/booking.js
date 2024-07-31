@@ -44,6 +44,18 @@ const editBooking = async (data, bookingId) => {
   return response.data 
 }
 
+const deleteBooking = async (bookingId) => {
+  const loggedUserJSON = window.localStorage.getItem('loggedInUser')
+  const user = JSON.parse(loggedUserJSON)
 
+  const token = `Bearer ${user.token}`
 
-export default { createBooking, getBookings, editBooking }
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.delete(`api/bookings/${bookingId}`, config)
+  return response.data 
+}
+
+export default { createBooking, getBookings, editBooking, deleteBooking }
