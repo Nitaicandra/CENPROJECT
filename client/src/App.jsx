@@ -8,6 +8,7 @@ import Home from './views/Home'
 import Search from './views/Search'
 import Service from './views/Service'
 import EditBookingForm from './components/EditBookingForm'
+import CreateBooking from './views/CreateBooking'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/service/:serviceId" element={<Service />} />
           <Route path="/edit/:bookingId" element={<EditBookingForm />} />
+          <Route exact path='/book/:serviceId' element={<CreateBooking/>} />
         </Routes>
       </Router>
     </>
