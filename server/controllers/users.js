@@ -1,5 +1,6 @@
 require("dotenv").config();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const SmartyStreetsSDK = require('smartystreets-javascript-sdk');
 const SmartyStreetsCore = SmartyStreetsSDK.core;
@@ -12,6 +13,7 @@ const Business = require('../models/business');
 const Customer = require('../models/customer');
 const Authentication = require('../models/authentication');
 
+const { getTokenFrom }  = require('./utils/helpers');
 
 async function createAuth(accType, username, password) {
   // creates new authentication credentials for a user 
@@ -68,33 +70,33 @@ async function validateAddress(street, city, state, zipCode) {
 }
 
 usersRouter.post('/businesses', async (request, response) => {
-    // Post a new business user account
-    const { username, password, businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
-    
-    // check for username / password first
-    if (!password || !username) {
-      return response.status(400).json({ error: 'a username and password are required' });
-    }
+  // Post a new business user account
+  const { username, password, businessName, address, zipCode, city, state, email, phoneNumber, availability } = request.body;
 
-    // checks for missing fields
-    if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
-      return response.status(400).json({ error: 'missing field(s) when creating a business account' });
-    }
+  // check for username / password first
+  if (!password || !username) {
+    return response.status(400).json({ error: 'a username and password are required' });
+  }
 
-    // checks for existing username / email
-    const existingUser = await Authentication.findOne({ username });
-    if (existingUser) {
-      return response.status(400).json({ error: 'username already exists, please select another' });
-    }
-    const existingEmail = await Business.findOne({ email });
-    if (existingEmail) {
-      return response.status(400).json({ error: 'email is associated with existing account, please select another' });
-    }
+  // checks for missing fields
+  if (!businessName || !address || !zipCode || !city || !state || !email || !phoneNumber || !availability) {
+    return response.status(400).json({ error: 'missing field(s) when creating a business account' });
+  }
 
-    const type = 'business'
-    const login = await createAuth(type, username, password);
+  // checks for existing username / email
+  const existingUser = await Authentication.findOne({ username });
+  if (existingUser) {
+    return response.status(400).json({ error: 'username already exists, please select another' });
+  }
+  const existingEmail = await Business.findOne({ email });
+  if (existingEmail) {
+    return response.status(400).json({ error: 'email is associated with existing account, please select another' });
+  }
 
-    const validAddress = await validateAddress(address, city, state, zipCode);
+  const type = 'business'
+  const login = await createAuth(type, username, password);
+
+  const validAddress = await validateAddress(address, city, state, zipCode);
 
   if (Object.keys(validAddress).length === 0) {
     return response.status(400).json({ error: 'invalid address' });
@@ -129,7 +131,7 @@ usersRouter.post('/customers', async (request, response) => {
   }
 
   // checks for missing fields
-  if ( !firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {
+  if (!firstName || !lastName || !address || !zipCode || !city || !state || !email || !phoneNumber) {
     return response.status(400).json({ error: 'missing field(s) when creating a customer account' });
   }
 
@@ -184,6 +186,27 @@ usersRouter.get('/customers', async (request, response) => {
   // Get all customer accounts
   const providers = await Customer.find({});
   response.json(providers);
+});
+
+usersRouter.get('/businesses/:businessId', async (request, response) => {
+  // Get a business account
+  const token = getTokenFrom(request)
+  if (!token) {
+    return response.status(401).json({ error: 'user is not logged in' });
+  }
+
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  if (!decodedToken || !decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
+
+  const businessId = request.params.businessId;
+  const business = await Business.findById(businessId).populate('services').populate('reviews');
+  if (!business) {
+    return response.status(404).json({ error: `no business found with id ${businessId}` });
+}
+ 
+  response.json(business);
 });
 
 module.exports = usersRouter;
