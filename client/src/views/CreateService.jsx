@@ -27,6 +27,7 @@ const CreateService = () => {
             setAlertType('alert-success')
             setTimeout(() => {
                 setAlertMessage(null)
+                navigate('/home')
             }, 5000)
         } 
         catch (exception){

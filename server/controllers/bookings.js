@@ -280,8 +280,19 @@ bookingsRouter.get('/future', async (request, response) => {
 
     let upcomingBookings = [];
     for (const booking of account.bookings) {
-        if ((booking.date > today) || (booking.date == today && booking.startTime > now)) { upcomingBookings.push(booking) }
+        if ((booking.date > today) || (booking.date == today && booking.startTime > now)) { 
+            const b = await Booking.findById(booking._id).populate('service').populate('provider').populate('customer')
+            upcomingBookings.push(b) 
+        }
     }
+
+    upcomingBookings.sort((a, b) => {
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+        return 0;
+    });
 
     response.status(200).json(upcomingBookings);
 })

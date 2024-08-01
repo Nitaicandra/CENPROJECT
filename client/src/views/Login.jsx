@@ -1,38 +1,30 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
+import { useNavigate, Navigate } from 'react-router-dom';
+
 import loginService from '../services/login'
 import LoginForm from '../components/LoginForm'
 import Alert from '../components/Alert'
+import { UserContext } from '../components/UserContext';
+
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [alertType, setAlertType] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-    }
-  }, [])
+  const { user, loginUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault()
     
     try {
-      const user = await loginService.login({
-        username, password,
-      })
-
-      window.localStorage.setItem(
-        'loggedInUser', JSON.stringify(user)
-      ) 
-
-      setUser(user)
+      const user = await loginService.login({ username, password })
+      loginUser(user);
       setUsername('')
       setPassword('')
+      navigate('/home')
     } catch (exception) {
       setErrorMessage('Error: Wrong credentials')
       setAlertType('alert-error')
@@ -61,9 +53,7 @@ const Login = () => {
     <div>
       {user === null ?
         loginForm() :
-        <div>
-          <p>{user.username} logged-in</p>
-        </div>
+        <Navigate to="/home" />
       }
     </div>
   )

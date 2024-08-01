@@ -95,7 +95,6 @@ searchRouter.get('/', async (request, response) => {
                 price: services[i].price,
                 businessId: services[i].provider._id,
                 businessName: services[i].provider.businessName,
-                avgRating: services[i].provider.avgRating,
                 distance: d
             }
         );

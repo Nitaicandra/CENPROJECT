@@ -6,7 +6,6 @@ const ServiceForm = ({
     handleDescriptionChange,
     handlePriceChange,
     handleSubmit
-
 }) => {
     return (
         <form onSubmit={handleSubmit}>

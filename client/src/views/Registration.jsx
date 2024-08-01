@@ -127,16 +127,6 @@ const Registration = () => {
   const handleCustomer = async (event) => {
     event.preventDefault()
 
-    /*
-    const formattedAvailability = Object.keys(availability)
-      .filter((day) => availability[day].checked)
-      .map((day) => ({
-        [day.charAt(0).toUpperCase() + day.slice(1)]: [
-          { start: availability[day].start, end: availability[day].end }
-        ]
-      }));
-    */
-
     try {
       await customerRegistrationService.registerCustomer({
         username,
