@@ -163,6 +163,7 @@ const BusinessProfile = () => {
                                             {review.reply ? (
                                                 <p> {business.businessName}: {review.reply}</p>
                                             ) : (
+                                                user && business && user.id === business.login && (
                                                 <form onSubmit={(event) => handleSubmitReply(review._id, event)}>
                                                     <label htmlFor="reply" className="block text-sm font-medium leading-6 text-gray-900">
                                                         Reply to this review
@@ -185,7 +186,7 @@ const BusinessProfile = () => {
                                                         Submit
                                                     </button>
                                                 </form>
-                                            )}
+                                            ))}
                                             <div className="border-b border-gray-900/10 pb-12"></div>
                                             <br></br>
                                         </div>))
