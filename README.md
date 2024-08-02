@@ -43,28 +43,28 @@ This can also be done as a POST on Postman using the same routing, it will retur
 
 To create a test customer account, POST to http://localhost:3001/api/users/customers in this format: \
 { \
-    "username": "a", \
-    "password": "b", \
-    "firstName": "c", \
-    "lastName": "d", \
-    "address": "e", \
-    "zipCode": "12345", \
-    "city": "g", \
-    "state": "HI", \
-    "email": "i@i.com", \
+    "username": "c1", \
+    "password": "pass", \
+    "firstName": "abc", \
+    "lastName": "def", \
+    "address": "1111 Main St", \
+    "zipCode": "64138", \
+    "city": "Kansas City", \
+    "state": "MO", \
+    "email": "a@b.com", \
     "phoneNumber": "1234567890" \
 }
 
 To create a test business account, POST to http://localhost:3001/api/users/businesses in this format: \
 { \
-    "username": "A", \
-    "password": "B", \
+    "username": "B1", \
+    "password": "PASS", \
     "businessName": "C", \
-    "address": "D", \
-    "zipCode": "12345", \
-    "city": "F", \
-    "state": "GA", \
-    "email": "H@H.com", \
+    "address": "1111 Main St", \
+    "zipCode": "64138", \
+    "city": "Kansas City", \
+    "state": "MO", \
+    "email": "A@B.com", \
     "phoneNumber": "1234567890", \
     "availability": [{ \
     "Monday": [{"start": "9:00", "end": "12:00"}], \
