@@ -3,7 +3,8 @@
 2. [Install Docker Desktop](https://docs.docker.com/engine/install/) and make sure you can use docker-compose on CLI
 3. [Fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) the main repository
 4. Clone your forked repository
-5. Important: You will need two .env files. One to be placed within the server package, and another in the root of the project. You can get these files in our discord channel :) (Note also make sure if you are on windows you have your docker application open while running docker commands)
+5. Important: You will need three .env files. Two will be inside the root and server package, while the other will be in the client package. These files are on our discord.
+6. If on Windows, make sure you have your docker application open while running docker commands
 
 # Run the application
 1. Go to your local (forked) repository and build the containers:
@@ -52,7 +53,7 @@ To create a test customer account, POST to http://localhost:3001/api/users/custo
     "state": "HI", \
     "email": "i@i.com", \
     "phoneNumber": "1234567890" \
-} \
+}
 
 To create a test business account, POST to http://localhost:3001/api/users/businesses in this format: \
 { \
@@ -69,17 +70,17 @@ To create a test business account, POST to http://localhost:3001/api/users/busin
     "Monday": [{"start": "9:00", "end": "12:00"}], \
     "Tuesday": [{"start": "9:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}] \
     }] \
-} \
+}
 
 These will return a login token, the username, and the account type.
 
-### Logging In ###
+### Logging In
 
 To log in, Post to http://localhost:3001/api/login/ in this format: \
 { \
     "username": "A", \
     "password": "B" \
-} \
+}
 
 This will return a login token, the username, and the account type.
 
@@ -91,7 +92,7 @@ TBD
 
 To request all services from a specific business, POST to http://localhost:3001/api/services/from/BUSINESS-ID with the business id in the BUSINESS-ID spot. \
 This will require a valid login token, in Postman this is in the Authorization tab as a Bearer token. \
- \
+
 
 To request more details about a specific service, POST to http://localhost:3001/api/services/SERVICE-ID with the service id in the SERVICE-ID spot. \
 This will return 
