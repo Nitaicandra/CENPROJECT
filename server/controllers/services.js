@@ -43,7 +43,7 @@ servicesRouter.post('/', async(request, response) => {
 })
 
 servicesRouter.get('/from/:businessId', async(request, response) => {
-    // Returns all services created by a business iff the requester is logged in with a valid token
+    // Returns all services created by a business if the requester is logged in with a valid token
     const token = getTokenFrom(request)
     if (!token) {
         return response.status(401).json({ error: 'user is not logged in' });
@@ -64,7 +64,7 @@ servicesRouter.get('/from/:businessId', async(request, response) => {
 })
 
 servicesRouter.get('/:serviceId', async(request, response) => {
-    // Returns a specific service iff the requester is logged in with a valid token
+    // Returns a specific service if the requester is logged in with a valid token
     const token = getTokenFrom(request)
     if (!token) {
         return response.status(401).json({ error: 'user is not logged in' });

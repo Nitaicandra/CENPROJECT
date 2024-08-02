@@ -33,39 +33,73 @@ For node/express:
 4. Make sure you update the containers after development with:
 ```docker-compose up --build```
 
-# Testing
+# Testing (Postman)
 
-To see a list of all users, go to http://localhost:3001/api/users
+To see a list of all users, go to http://localhost:3001/api/users \
+This can also be done as a POST on Postman using the same routing, it will return a list of all usernames, their account type, and unique id.
 
-## Creating an Account (Postman) ##
+### Creating an Account
 
-To create a test customer account, you can use localhost:3001/api/users/customers and Post a sample like this:
-'''{
-    "username": "a",
-    "password": "b",
-    "firstName": "c",
-    "lastName": "d",
-    "address": "e",
-    "zipCode": "12345",
-    "city": "g",
-    "state": "HI",
-    "email": "i@i.com",
-    "phoneNumber": "1234567890"
-}'''
+To create a test customer account, POST to http://localhost:3001/api/users/customers in this format: \
+{ \
+    "username": "a", \
+    "password": "b", \
+    "firstName": "c", \
+    "lastName": "d", \
+    "address": "e", \
+    "zipCode": "12345", \
+    "city": "g", \
+    "state": "HI", \
+    "email": "i@i.com", \
+    "phoneNumber": "1234567890" \
+} \
 
-To create a test business account, you can use localhost:3001/api/users/businesses and Post a sample like this:
-'''{
-    "username": "A",
-    "password": "B",
-    "businessName": "C",
-    "address": "D",
-    "zipCode": "12345",
-    "city": "F",
-    "state": "GA",
-    "email": "H@H.com",
-    "phoneNumber": "1234567890",
-    "availability": [{
-    "Monday": [{"start": "9:00", "end": "12:00"}],
-    "Tuesday": [{"start": "9:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}]
-    }]
-}'''
+To create a test business account, POST to http://localhost:3001/api/users/businesses in this format: \
+{ \
+    "username": "A", \
+    "password": "B", \
+    "businessName": "C", \
+    "address": "D", \
+    "zipCode": "12345", \
+    "city": "F", \
+    "state": "GA", \
+    "email": "H@H.com", \
+    "phoneNumber": "1234567890", \
+    "availability": [{ \
+    "Monday": [{"start": "9:00", "end": "12:00"}], \
+    "Tuesday": [{"start": "9:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}] \
+    }] \
+} \
+
+These will return a login token, the username, and the account type.
+
+### Logging In ###
+
+To log in, Post to http://localhost:3001/api/login/ in this format: \
+{ \
+    "username": "A", \
+    "password": "B" \
+} \
+
+This will return a login token, the username, and the account type.
+
+### Search
+
+TBD
+
+### Services
+
+To request all services from a specific business, POST to http://localhost:3001/api/services/from/BUSINESS-ID with the business id in the BUSINESS-ID spot. \
+This will require a valid login token, in Postman this is in the Authorization tab as a Bearer token. \
+ \
+
+To request more details about a specific service, POST to http://localhost:3001/api/services/SERVICE-ID with the service id in the SERVICE-ID spot. \
+This will return 
+
+### Bookings
+
+TBD
+
+### Reviews
+
+TBD
