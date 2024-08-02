@@ -201,7 +201,8 @@ usersRouter.get('/businesses/:businessId', async (request, response) => {
   }
 
   const businessId = request.params.businessId;
-  const business = await Business.findById(businessId).populate('services').populate('reviews');
+  const business = await Business.findById(businessId).populate('services').populate({ path: 'reviews', populate: { path: 'customer' } });
+    
   if (!business) {
     return response.status(404).json({ error: `no business found with id ${businessId}` });
 }

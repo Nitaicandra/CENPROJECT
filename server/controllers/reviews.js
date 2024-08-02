@@ -7,13 +7,7 @@ const Review = require('../models/review');
 const Auth = require('../models/authentication');
 const jwt = require('jsonwebtoken');
 
-const getTokenFrom = request => {
-    const authorization = request.get('authorization');
-    if (authorization && authorization.startsWith('Bearer ')) {
-        return authorization.replace('Bearer ', '');
-    }
-    return null;
-}
+const { getTokenFrom }  = require('./utils/helpers');
 
 reviewsRouter.post('/:bookingId', async (request, response) => {
     // Allows logged-in customer to leave a review about bookingId
@@ -124,6 +118,9 @@ reviewsRouter.put('/reply/:reviewId', async (request, response) => {
     }
 
     const {reply} = request.body;
+    if(!reply){
+        return response.status(400).json({ error: 'no reply was sent in request' });
+    }
     review.reply = reply;
     const updatedReview = await review.save();
 

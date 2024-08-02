@@ -328,10 +328,34 @@ bookingsRouter.get('/past', async (request, response) => {
 
     let pastBookings = [];
     for (const booking of account.bookings) {
-        if ((booking.date < today) || (booking.date == today && booking.startTime < now)) { pastBookings.push(booking) }
+        if ((booking.date < today) || (booking.date == today && booking.startTime < now)) { 
+            const b = await Booking.findById(booking._id).populate('service').populate('provider').populate('customer')
+            pastBookings.push(b) 
+         }
     }
 
     response.status(200).json(pastBookings);
+})
+
+bookingsRouter.get('/:bookingId', async (request, response) => {
+    // Get a specific booking
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const bookingId = request.params.bookingId;
+    const booking = await Booking.findById(bookingId).populate('provider').populate('customer').populate('service')
+    if (!booking) {
+        return response.status(404).json({ error: `could not find booking with id ${bookingId}`});
+    }
+
+    response.status(200).json(booking);
 })
 
 module.exports = bookingsRouter;
