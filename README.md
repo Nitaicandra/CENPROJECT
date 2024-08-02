@@ -12,7 +12,9 @@
 2. To stop the containers:
 ```docker-compose down```
 
-To access the frontend of the application, go to http://localhost:5173
+# Usage
+
+To access the frontend of the application, go to http://localhost:5173 \
 To access the backend/api of the application, go to http://localhost:3001
 
 # Development guidelines
@@ -30,3 +32,40 @@ For node/express:
 
 4. Make sure you update the containers after development with:
 ```docker-compose up --build```
+
+# Testing
+
+To see a list of all users, go to http://localhost:3001/api/users
+
+## Creating an Account (Postman) ##
+
+To create a test customer account, you can use localhost:3001/api/users/customers and Post a sample like this:
+'''{
+    "username": "a",
+    "password": "b",
+    "firstName": "c",
+    "lastName": "d",
+    "address": "e",
+    "zipCode": "12345",
+    "city": "g",
+    "state": "HI",
+    "email": "i@i.com",
+    "phoneNumber": "1234567890"
+}'''
+
+To create a test business account, you can use localhost:3001/api/users/businesses and Post a sample like this:
+'''{
+    "username": "A",
+    "password": "B",
+    "businessName": "C",
+    "address": "D",
+    "zipCode": "12345",
+    "city": "F",
+    "state": "GA",
+    "email": "H@H.com",
+    "phoneNumber": "1234567890",
+    "availability": [{
+    "Monday": [{"start": "9:00", "end": "12:00"}],
+    "Tuesday": [{"start": "9:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}]
+    }]
+}'''
