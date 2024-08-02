@@ -10,6 +10,7 @@ import Service from './views/Service'
 import EditBookingForm from './components/EditBookingForm'
 import CreateBooking from './views/CreateBooking'
 import BusinessProfile from './views/BusinessProfile'
+import ReviewForm from './components/ReviewForm'
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/edit/:bookingId" element={<EditBookingForm />} />
           <Route exact path='/book/:serviceId' element={<CreateBooking/>} />
           <Route exact path='/business/:businessId' element={<BusinessProfile/>} />
+          <Route exact path='/review/:bookingId' element={<ReviewForm/>} />
         </Routes>
       </Router>
     </>

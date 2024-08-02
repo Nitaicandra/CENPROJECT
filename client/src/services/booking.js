@@ -30,6 +30,34 @@ const getBookings = async () => {
     return response.data 
 }
 
+const getBooking = async (bookingId) => {
+  const loggedUserJSON = window.localStorage.getItem('loggedInUser')
+  const user = JSON.parse(loggedUserJSON)
+
+  const token = `Bearer ${user.token}`
+
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.get(`api/bookings/${bookingId}`, config)
+  return response.data 
+}
+
+const getpastBookings = async () => {
+  const loggedUserJSON = window.localStorage.getItem('loggedInUser')
+  const user = JSON.parse(loggedUserJSON)
+
+  const token = `Bearer ${user.token}`
+
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.get(`api/bookings/past`, config)
+  return response.data 
+}
+
 const editBooking = async (data, bookingId) => {
   const loggedUserJSON = window.localStorage.getItem('loggedInUser')
   const user = JSON.parse(loggedUserJSON)
@@ -58,4 +86,4 @@ const deleteBooking = async (bookingId) => {
   return response.data 
 }
 
-export default { createBooking, getBookings, editBooking, deleteBooking }
+export default { createBooking, getBookings, getBooking, getpastBookings, editBooking, deleteBooking }

@@ -16,6 +16,7 @@ const Home = () => {
 
     const [query, setQuery] = useState('')
     const [bookings, setBookings] = useState([])
+    const [bookingsToReview, setBookingsToReview] = useState([])
 
     useEffect(() => {
         if (!user){
@@ -25,6 +26,10 @@ const Home = () => {
         async function fetchData() {
             const b = await BookingService.getBookings()
             setBookings(b)
+
+            const pastBookings = await BookingService.getpastBookings()
+            const filtered = pastBookings.filter(booking => !booking.review)
+            setBookingsToReview(filtered)
         }
         fetchData()
     }, []);
@@ -59,6 +64,12 @@ const Home = () => {
         )
     }
 
+    const onClickReview = (bookingId) => {
+        return (
+            navigate(`/review/${bookingId}`)
+        )
+    }
+
     const onClickNewService = () => {
         return(
             navigate('/create-service')
@@ -72,6 +83,8 @@ const Home = () => {
                 handleQueryChange={({ target }) => setQuery(target.value)}
                 handleSearch={handleSearch}
                 bookings={bookings}
+                bookingsToReview={bookingsToReview}
+                onClickReview={onClickReview}
             />
         )
     }
