@@ -96,7 +96,7 @@ usersRouter.post('/businesses', async (request, response) => {
 
     const validAddress = await validateAddress(address, city, state, zipCode);
 
-  if (Object.keys(validAddress).length === 0) {
+    if (validAddress === undefined || Object.keys(validAddress).length === 0) {
     return response.status(400).json({ error: 'invalid address' });
   }
 
@@ -148,7 +148,7 @@ usersRouter.post('/customers', async (request, response) => {
 
   const validAddress = await validateAddress(address, city, state, zipCode);
 
-  if (Object.keys(validAddress).length === 0) {
+  if (validAddress === undefined || Object.keys(validAddress).length === 0) {
     return response.status(400).json({ error: 'invalid address' });
   }
 
