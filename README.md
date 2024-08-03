@@ -4,7 +4,7 @@
 3. [Fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) the main repository
 4. Clone your forked repository
 5. Important: You will need three .env files. Two will be inside the root and server package, while the other will be in the client package. These files are on our discord.
-6. If on Windows, make sure you have your docker application open while running docker commands
+6. Make sure you have your docker application open while running docker commands
 
 # Run the application
 1. Go to your local (forked) repository and build the containers:
@@ -43,33 +43,34 @@ This can also be done as a POST on Postman using the same routing, it will retur
 
 To create a test customer account, POST to http://localhost:3001/api/users/customers in this format: \
 { \
-    "username": "c1", \
-    "password": "pass", \
-    "firstName": "abc", \
-    "lastName": "def", \
-    "address": "1111 Main St", \
-    "zipCode": "64138", \
-    "city": "Kansas City", \
-    "state": "MO", \
-    "email": "a@b.com", \
+    "username": "customer", \
+    "password": "pass123", \
+    "firstName": "first", \
+    "lastName": "last", \
+    "address": "426 W Plant St", \
+    "zipCode": "34787", \
+    "city": "Winter Garden", \
+    "state": "FL", \
+    "email": "email@email.com", \
     "phoneNumber": "1234567890" \
 }
 
 To create a test business account, POST to http://localhost:3001/api/users/businesses in this format: \
 { \
-    "username": "B1", \
-    "password": "PASS", \
-    "businessName": "C", \
-    "address": "1111 Main St", \
+    "username": "Business", \
+    "password": "PASS123", \
+    "businessName": "Company", \
+    "address": "426 W Plant St", \
     "zipCode": "64138", \
-    "city": "Kansas City", \
-    "state": "MO", \
-    "email": "A@B.com", \
+    "city": "34787", \
+    "state": "FL", \
+    "email": "Email@Email.com", \
     "phoneNumber": "1234567890", \
-    "availability": [{ \
-    "Monday": [{"start": "9:00", "end": "12:00"}], \
-    "Tuesday": [{"start": "9:00", "end": "12:00"}, {"start": "13:00", "end": "17:00"}] \
-    }] \
+    "availability":[
+        {"Monday":[{"start":"09:00","end":"18:00"}]}, \
+        {"Wednesday":[{"start":"09:00","end":"18:00"}]}, \
+        {"Friday":[{"start":"09:00","end":"18:00"}]}] \
+    ] \
 }
 
 These will return a login token, the username, and the account type.
