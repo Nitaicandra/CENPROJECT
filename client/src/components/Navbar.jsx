@@ -25,13 +25,17 @@ const NavBar = () => {
         { name: 'Home', href: '/home' },
     ]
 
+    const navAdmin = [
+        { name: 'Home', href: '/admin' },
+    ]
+
     const onClickLogout = (e) => {
         e.preventDefault()
         logoutUser()
         navigate('/')
     }
 
-    const navItems = user?.type === 'customer' ? navCustomer : navBusiness
+    const navItems = user?.type === 'admin' ? navAdmin : (user?.type === 'customer' ? navCustomer : navBusiness)
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
