@@ -36,27 +36,27 @@ reviewsRouter.post('/:bookingId', async (request, response) => {
     const bookingId = request.params.bookingId;
     const booking = await Booking.findById(bookingId);
     if (!booking) {
-        return response.status(404).json({ error: `no booking found with id ${bookingId}`});
+        return response.status(404).json({ error: `no booking found with id ${bookingId}` });
     }
 
-    if (booking.review){
-        return response.status(400).json({ error: `booking already has a review`});
+    if (booking.review) {
+        return response.status(400).json({ error: `booking already has a review` });
     }
 
-    if (booking.customer._id.toString() !== customer._id.toString()){
-        return response.status(403).json({ error: `cannot leave a review for someone else's booking`});
+    if (booking.customer._id.toString() !== customer._id.toString()) {
+        return response.status(403).json({ error: `cannot leave a review for someone else's booking` });
     }
 
     let today = new Date();
     today = today.toISOString().split('T')[0];
 
-    if(booking.date >= today){
-        return response.status(400).json({ error: `cannot leave a review for an upcoming booking`});
+    if (booking.date >= today) {
+        return response.status(400).json({ error: `cannot leave a review for an upcoming booking` });
     }
 
-    const {rating, review} = request.body;
-    if (rating < 0 || rating > 5){
-        return response.status(400).json({ error: `invalid rating`});
+    const { rating, review } = request.body;
+    if (rating < 0 || rating > 5) {
+        return response.status(400).json({ error: `invalid rating` });
     }
 
     const business = await Business.findById(booking.provider._id);
@@ -106,14 +106,14 @@ reviewsRouter.put('/reply/:reviewId', async (request, response) => {
     const reviewId = request.params.reviewId;
     const review = await Review.findById(reviewId);
     if (!review) {
-        return response.status(404).json({ error: `no review found with id ${reviewId}`});
+        return response.status(404).json({ error: `no review found with id ${reviewId}` });
     }
 
-    if(review.provider._id.toString() !== business._id.toString()){
+    if (review.provider._id.toString() !== business._id.toString()) {
         return response.status(403).json({ error: 'cannot reply to a review for another business' });
     }
 
-    if (review.reply){
+    if (review.reply) {
         return response.status(400).json({ error: 'review already has a reply' });
     }
 
@@ -121,6 +121,7 @@ reviewsRouter.put('/reply/:reviewId', async (request, response) => {
     if(!reply){
         return response.status(400).json({ error: 'no reply was sent in request' });
     }
+  
     review.reply = reply;
     const updatedReview = await review.save();
 
@@ -150,6 +151,43 @@ reviewsRouter.get('/business', async (request, response) => {
     }
 
     response.status(200).json(business.reviews);
+})
+
+reviewsRouter.get('/rating/:businessId', async (request, response) => {
+    // Calculates and returns the current rating of a business from their customer reviews
+    // Response object contaisn the calcuated avg rating and count of reviews
+    const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const businessId = request.params.businessId;
+
+    const business = await Business.findById(businessId).populate('reviews');
+    if (!business) {
+        return response.status(404).json({ error: `no business found with id ${businessId}` });
+    }
+
+    let totalRating = 0;
+    let reviewCount = business.reviews.length;
+
+    business.reviews.forEach(review => {
+        totalRating += review.rating;
+    });
+
+    let averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
+
+    const res = {
+        averageRating,
+        reviewCount
+    }
+
+    response.status(200).json(res);
 })
 
 module.exports = reviewsRouter;
