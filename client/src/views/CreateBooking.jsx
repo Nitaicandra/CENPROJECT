@@ -56,8 +56,6 @@ const CreateBooking = () => {
     const handleSubmit = async (event) => {
         event.preventDefault()
 
-        console.log(serviceId)
-
         const weekdays = {
             'Mon': 'Monday',
             'Tue': 'Tuesday',

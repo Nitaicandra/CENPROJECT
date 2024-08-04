@@ -3,7 +3,9 @@ const CustomerHome = ({
     query,
     handleQueryChange,
     handleSearch,
-    bookings
+    bookings,
+    bookingsToReview,
+    onClickReview
 }) => {
     return (
         <>
@@ -51,6 +53,28 @@ const CustomerHome = ({
                             ))
                         ) : (
                             <p> No upcoming bookings :( </p>
+                        )}
+
+                        <h2 className="mt-9 text-base font-semibold leading-7 text-gray-900" >Review Your Fullfilled Bookings </h2>
+
+                        {bookingsToReview.length > 0 ? (
+                            bookingsToReview.map((booking, index) => (
+                                <div key={index} className="my-5 max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{booking.date} </h5>
+
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Time: from {booking.startTime} to {booking.endTime} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Service: {booking.service.serviceName} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Provider: {booking.provider.businessName} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Price: $ {booking.price.$numberDecimal} </p>
+                                    <button
+                                        className="mr-10 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        onClick={() => onClickReview(booking._id)}>
+                                        Review
+                                    </button>
+                                </div>
+                            ))
+                        ) : (
+                            <p> No bookings to review :) </p>
                         )}
                     </div>
                 </main>
