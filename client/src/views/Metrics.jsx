@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
+
 import { UserContext } from '../components/UserContext'
 
 import BusinessServ from '../services/business'
@@ -41,7 +42,7 @@ const Metrics = () => {
     }
 
     if (!user || !account || user.type !== 'business') {
-        return <Navigate to="/" />;
+        return <Navigate to="/" />
     }
 
     const totalEarnings = bookings.reduce((total, booking) => total + parseFloat(booking.price.$numberDecimal), 0)
