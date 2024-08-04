@@ -11,9 +11,10 @@ let client = SmartyStreetsCore.buildClient.usStreet(credentials);
 const usersRouter = require('express').Router();
 const Business = require('../models/business');
 const Customer = require('../models/customer');
+const Admin = require('../models/admin');
 const Authentication = require('../models/authentication');
 
-const { getTokenFrom }  = require('./utils/helpers');
+const { getTokenFrom } = require('./utils/helpers');
 
 async function createAuth(accType, username, password) {
   // creates new authentication credentials for a user 
@@ -98,7 +99,7 @@ usersRouter.post('/businesses', async (request, response) => {
 
   const validAddress = await validateAddress(address, city, state, zipCode);
 
-    if (validAddress === undefined || Object.keys(validAddress).length === 0) {
+  if (validAddress === undefined || Object.keys(validAddress).length === 0) {
     return response.status(400).json({ error: 'invalid address' });
   }
 
@@ -170,6 +171,64 @@ usersRouter.post('/customers', async (request, response) => {
   response.status(201).json(login);
 });
 
+usersRouter.post('/admins', async (request, response) => {
+  // Post a new business user account
+  const admins = await Admin.find({});
+  if (admins.length > 0) {
+    // after the first admin account is instantiated, subsequent admins must be created by an admin
+    const token = getTokenFrom(request)
+    if (!token) {
+      return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Authentication.findById(decodedToken.id)
+    if (user.accType !== 'admin') {
+      return response.status(403).json({ error: 'not an admin account' });
+    }
+  }
+
+  const { username, password, firstName, lastName, email, department } = request.body;
+
+  // check for username / password first
+  if (!password || !username) {
+    return response.status(400).json({ error: 'a username and password are required' });
+  }
+
+  // checks for missing fields
+  if (!firstName || !lastName || !department || !email) {
+    return response.status(400).json({ error: 'missing field(s) when creating a business account' });
+  }
+
+  // checks for existing username / email
+  const existingUser = await Authentication.findOne({ username });
+  if (existingUser) {
+    return response.status(400).json({ error: 'username already exists, please select another' });
+  }
+  const existingEmail = await Business.findOne({ email });
+  if (existingEmail) {
+    return response.status(400).json({ error: 'email is associated with existing account, please select another' });
+  }
+
+  const type = 'admin'
+  const login = await createAuth(type, username, password);
+
+  const user = new Admin({
+    firstName,
+    lastName,
+    department,
+    email,
+    login: login._id
+  })
+
+  await user.save()
+  response.status(201).json(login);
+});
+
 usersRouter.get('/', async (request, response) => {
   // Get all logins
   const logins = await Authentication.find({});
@@ -188,6 +247,12 @@ usersRouter.get('/customers', async (request, response) => {
   response.json(providers);
 });
 
+usersRouter.get('/admins', async (request, response) => {
+  // Get all admin accounts
+  const admins = await Admin.find({});
+  response.json(admins);
+});
+
 usersRouter.get('/businesses/:businessId', async (request, response) => {
   // Get a business account
   const token = getTokenFrom(request)
@@ -202,34 +267,34 @@ usersRouter.get('/businesses/:businessId', async (request, response) => {
 
   const businessId = request.params.businessId;
   const business = await Business.findById(businessId).populate('services').populate({ path: 'reviews', populate: { path: 'customer' } });
-    
+
   if (!business) {
     return response.status(404).json({ error: `no business found with id ${businessId}` });
-}
- 
+  }
+
   response.json(business);
 });
 
 usersRouter.get('/account', async (request, response) => {
   // Get the account associated with the logged-in user
   const token = getTokenFrom(request)
-    if (!token) {
-        return response.status(401).json({ error: 'user is not logged in' });
-    }
+  if (!token) {
+    return response.status(401).json({ error: 'user is not logged in' });
+  }
 
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-    if (!decodedToken || !decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' });
-    }
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  if (!decodedToken || !decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' });
+  }
 
-    const user = await Authentication.findById(decodedToken.id)
+  const user = await Authentication.findById(decodedToken.id)
 
-    let account
-    if (user.accType === 'customer') {
-      account = await Customer.findOne({ "login": { _id: decodedToken.id } })
-    } else if (user.accType === 'business'){
-      account = await Business.findOne({ "login": { _id: decodedToken.id } })
-    } 
+  let account
+  if (user.accType === 'customer') {
+    account = await Customer.findOne({ "login": { _id: decodedToken.id } })
+  } else if (user.accType === 'business') {
+    account = await Business.findOne({ "login": { _id: decodedToken.id } })
+  }
 
   response.json(account);
 });
