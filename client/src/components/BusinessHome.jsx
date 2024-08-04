@@ -29,6 +29,11 @@ const BusinessHome = ({
                                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Time: from {booking.startTime} to {booking.endTime} </p>
                                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Service: {booking.service.serviceName} </p>
                                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Customer: {booking.customer.firstName} {booking.customer.lastName} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Customer email: {booking.customer.email} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Customer phone: {booking.customer.phoneNumber}  </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Provider: {booking.provider.businessName} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Provider email: {booking.provider.email} </p>
+                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Provider phone: {booking.provider.phoneNumber}  </p>
                                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Price: $ {booking.price.$numberDecimal} </p>
                                     <button
                                         className="mr-10 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-neutral-950"
