@@ -19,7 +19,7 @@ const BusinessProfile = () => {
     useEffect(() => {
         if (userLoading) { return }
 
-        if (!user || !account ) {
+        if (!user || !account) {
             navigate('/')
             return
         }
@@ -88,9 +88,12 @@ const BusinessProfile = () => {
                     <header className="bg-white shadow">
                         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                             <h1 className="text-3xl font-bold tracking-tight text-gray-900">{business.businessName}</h1>
-                            <div className='mt-4 flex'>
-                            <Rating rating={roundedAvgRating} /> <span>{rating.averageRating}</span>
-                            </div>
+
+                            {roundedAvgRating !== 0 ? (
+                                <div className='mt-4 flex'>
+                                    <Rating rating={roundedAvgRating} /> <span>{rating.averageRating}</span>
+                                </div>
+                            ) : ('')}
                         </div>
                     </header>
                     <main>
