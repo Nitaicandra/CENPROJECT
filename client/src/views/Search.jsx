@@ -1,25 +1,37 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useState, useContext, useEffect } from 'react'
+import { useLocation, useNavigate, Navigate } from 'react-router-dom'
 
 import SearchService from '../services/search'
 import Alert from '../components/Alert'
+import { UserContext } from '../components/UserContext'
 
 const Search = () => {
     const location = useLocation()
     const navigate = useNavigate()
+    const { user, loading } = useContext(UserContext)
 
     const [results, setResults] = useState([]);
     const [alertMessage, setAlertMessage] = useState(null)
     const [alertType, setAlertType] = useState(null)
 
     useEffect(() => {
+        if (loading) { return }
+
         const queryParams = new URLSearchParams(location.search);
         const query = queryParams.get('query');
 
         if (query) {
             fetchSearchResults(query);
         }
-    }, [location]);
+    }, [location])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
+    if (!user || user.type !== 'customer') {
+        return <Navigate to="/" />
+    }
 
     const fetchSearchResults = async (query) => {
         try {

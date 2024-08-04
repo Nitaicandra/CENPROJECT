@@ -1,27 +1,48 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import  React, { useState, useContext, useEffect } from 'react'
+import { useNavigate, Navigate, useParams } from 'react-router-dom'
+
+import { UserContext } from '../components/UserContext'
 
 import serviceServ from '../services/service'
 
 const Service = () => {
+    const { user, loading: userLoading } = useContext(UserContext)
     const navigate = useNavigate()
     const { serviceId } = useParams()
 
     const [service, setService] = useState({})
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        if (userLoading) { return }
+
+        if (!user || user.type !== 'customer') {
+            navigate('/')
+            return
+        }
+
         async function fetchData() {
             try {
                 const s = await serviceServ.getService(serviceId)
                 setService(s)
             } catch (exception) {
                 console.error("Error fetching service: ", exception);
+            } finally {
+                setLoading(false)
             }
         }
 
         fetchData()
 
-    }, [serviceId])
+    }, [serviceId, user, userLoading])
+
+    if (userLoading || loading) {
+        return <div>Loading...</div>
+    }
+
+    if (!user || user.type !== 'customer') {
+        return <Navigate to="/" />;
+    }
 
     const onClickBook = () => {
         navigate(`/book/${serviceId}`)
