@@ -5,6 +5,7 @@ import { UserContext } from '../components/UserContext'
 
 import BusinessServ from '../services/business'
 import BookingServ from '../services/booking'
+import ReviewServ from '../services/review'
 
 const Metrics = () => {
     const { user, account, loading: userLoading } = useContext(UserContext)
@@ -13,6 +14,7 @@ const Metrics = () => {
     const [business, setBusiness] = useState(null)
     const [bookings, setBookings] = useState([])
     const [loading, setLoading] = useState(true)
+    const [rating, setRating] = useState(null)
 
     useEffect(() => {
         if (userLoading) { return }
@@ -28,6 +30,10 @@ const Metrics = () => {
 
                 const pastBookings = await BookingServ.getpastBookings()
                 setBookings(pastBookings)
+
+                const r = await ReviewServ.getRating(account.id)
+                setRating(r)
+
             } catch (error) {
                 console.error('Error fetching data:', error)
             } finally {
@@ -86,7 +92,7 @@ const Metrics = () => {
 
                         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                             <h2 className="text-base font-semibold leading-7 text-gray-900">Reviews</h2>
-                            <p>You have received <b> x </b> reviews so far and have an average score rating of <b> y </b></p>
+                            <p>You have received <b> {rating.reviewCount} </b> reviews so far and have an average score rating of <b> {rating.averageRating} </b></p>
 
                         </div>
                     </main>
