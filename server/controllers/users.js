@@ -210,4 +210,28 @@ usersRouter.get('/businesses/:businessId', async (request, response) => {
   response.json(business);
 });
 
+usersRouter.get('/account', async (request, response) => {
+  // Get the account associated with the logged-in user
+  const token = getTokenFrom(request)
+    if (!token) {
+        return response.status(401).json({ error: 'user is not logged in' });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken || !decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await Authentication.findById(decodedToken.id)
+
+    let account
+    if (user.accType === 'customer') {
+      account = await Customer.findOne({ "login": { _id: decodedToken.id } })
+    } else if (user.accType === 'business'){
+      account = await Business.findOne({ "login": { _id: decodedToken.id } })
+    } 
+
+  response.json(account);
+});
+
 module.exports = usersRouter;
