@@ -56,7 +56,7 @@ const ReviewForm = () => {
         return <div>Loading...</div>
     }
 
-    if (!user || user.type !== 'customer') {
+    if (!user) {
         return <Navigate to="/" />;
     }
 

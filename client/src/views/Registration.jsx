@@ -1,24 +1,14 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import BusinessRegForm from "../components/BusinessRegForm"
 import CustomerRegForm from "../components/CustomerRegForm"
 import businessRegistrationService from "../services/businessregistration"
 import customerRegistrationService from "../services/customerregistration"
 import Alert from '../components/Alert'
-import { UserContext } from '../components/UserContext'
 
 const Registration = () => {
-  const navigate = useNavigate()
-  const { user, loading } = useContext(UserContext)
-
-  if (loading) {
-    return <div>Loading...</div>
-}
-
-if (user) {
-    return <Navigate to="/" />
-}
+  const navigate = useNavigate();
 
   //Common states to both forms 
   const [accType, setAccType] = useState('customer')

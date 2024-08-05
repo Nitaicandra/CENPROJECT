@@ -1,29 +1,19 @@
-import React, { useState, useContext } from 'react'
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 import ServiceForm from '../components/ServiceForm'
 import Alert from '../components/Alert'
-import { UserContext } from '../components/UserContext'
 
 import serviceS from '../services/service'
 
 const CreateService = () => {
-    const navigate = useNavigate()
-    const { user, loading } = useContext(UserContext)
+    const navigate = useNavigate();
 
     const [alertType, setAlertType] = useState(null)
     const [alertMessage, setAlertMessage] = useState(null)
     const [serviceName, setServiceName] = useState('')
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState('')
-
-    if (loading) {
-        return <div>Loading...</div>
-    }
-
-    if (!user || user.type !== 'business') {
-        return <Navigate to="/" />;
-    }
 
     const handleSubmit = async (event) => {
         event.preventDefault()

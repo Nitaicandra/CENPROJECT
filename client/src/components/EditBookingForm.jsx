@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react'
-import { useNavigate, Navigate, useParams } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import bookingService from '../services/booking'
 import Alert from '../components/Alert'
-import { UserContext } from '../components/UserContext'
 
 const EditBookingForm = () => {
     const [alertMessage, setAlertMessage] = useState(null)
@@ -14,16 +13,7 @@ const EditBookingForm = () => {
     const [endTime, setEndTime] = useState('')
 
     const { bookingId } = useParams()
-    const { user, loading } = useContext(UserContext)
     const navigate = useNavigate()
-
-    if (loading) {
-        return <div>Loading...</div>
-    }
-
-    if (!user || user.type !== 'business') {
-        return <Navigate to="/" />;
-    }
 
     const handleTimeChange = (e) => {
         e.preventDefault()

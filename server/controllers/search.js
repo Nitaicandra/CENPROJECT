@@ -50,7 +50,7 @@ async function getDistances(customer, services){
 
 searchRouter.get('/', async (request, response) => {
     // Search by a query parameter
-    // Returns all services offered by businesses within 20 miles of the logged-in customer
+    // Returns all services offered by businesses within 10 miles of the logged-in customer
     const token = getTokenFrom(request)
     if (!token) {
         return response.status(401).json({ error: 'user is not logged in' });
@@ -83,7 +83,7 @@ searchRouter.get('/', async (request, response) => {
     let results = []
     for(let i = 0; i < services.length; i++){
         let d = distances[i]
-        if (d > 20 || !d){
+        if (d > 10 || !d){
             continue;
         }
 
