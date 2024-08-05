@@ -19,8 +19,6 @@ const Home = () => {
     const [bookingsToReview, setBookingsToReview] = useState([])
 
     useEffect(() => {
-        //if (loading) { return }
-
         if (!user){
             navigate('/')
             return

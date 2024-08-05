@@ -32,7 +32,7 @@ const BusinessProfile = () => {
                 setBusinessHours(parsedAvailability)
             }
 
-            const r = await reviewServ.getRating(account.id)
+            const r = await reviewServ.getRating(businessId)
             setRating(r)
 
             setLoading(false);
@@ -201,7 +201,7 @@ const BusinessProfile = () => {
                                             <br></br>
                                         </div>))
                                 ) : (
-                                    <p> This business offers no services yet :( </p>
+                                    <p> This business has no reviews yet :( </p>
                                 )}
                             </div>
                         </div>
