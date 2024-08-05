@@ -180,7 +180,7 @@ reviewsRouter.get('/rating/:businessId', async (request, response) => {
         totalRating += review.rating;
     });
 
-    let averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
+    let averageRating = reviewCount > 0 ? (totalRating / reviewCount).toFixed(2) : 0;
 
     const res = {
         averageRating,
