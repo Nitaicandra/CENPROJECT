@@ -102,7 +102,7 @@ const CreateBooking = () => {
             setAlertType('alert-success')
             setTimeout(() => {
                 setAlertMessage(null)
-            }, 5000)
+            }, 2000)
         } catch (exception) {
             setAlertMessage(exception.response.data.error)
             setAlertType('alert-error')
