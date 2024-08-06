@@ -153,7 +153,8 @@ bookingsRouter.delete('/:bookingId', async (request, response) => {
     }
 
     let today = new Date();
-    today = today.toISOString().split('T')[0];
+    let now = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    today = today.toLocaleDateString('en-CA')
 
     if (booking.date <= today) {
         return response.status(403).json({ error: 'cannot delete past nor same-day bookings' });
@@ -208,12 +209,10 @@ bookingsRouter.put('/edit/:bookingId', async (request, response) => {
     }
 
     let today = new Date();
-    let now = today.toTimeString().split(' ')[0].slice(0, 5);
-    today = today.toISOString().split('T')[0];
+    let now = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    today = today.toLocaleDateString('en-CA')
 
     if ((booking.date < today) || (booking.date == today && booking.startTime < now)) {
-        console.log(now);
-        console.log(booking.startTime)
         return response.status(403).json({ error: 'cannot modify past bookings' });
     }
 
@@ -275,8 +274,9 @@ bookingsRouter.get('/future', async (request, response) => {
     }
 
     let today = new Date();
-    let now = today.toTimeString().split(' ')[0].slice(0, 5);
-    today = today.toISOString().split('T')[0];
+    let now = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    today = today.toLocaleDateString('en-CA')
+
 
     let upcomingBookings = [];
     for (const booking of account.bookings) {
@@ -323,8 +323,8 @@ bookingsRouter.get('/past', async (request, response) => {
     }
 
     let today = new Date();
-    let now = today.toTimeString().split(' ')[0].slice(0, 5);
-    today = today.toISOString().split('T')[0];
+    let now = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    today = today.toLocaleDateString('en-CA')
 
     let pastBookings = [];
     for (const booking of account.bookings) {

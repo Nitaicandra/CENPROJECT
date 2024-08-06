@@ -13,6 +13,7 @@ import BusinessProfile from './views/BusinessProfile'
 import ReviewForm from './components/ReviewForm'
 import Navbar from './components/Navbar'
 import Metrics from './views/Metrics'
+import Admin from './views/Admin'
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const MainLayout = () => {
         <Route exact path='/business/:businessId' element={<BusinessProfile/>} />
         <Route exact path='/review/:bookingId' element={<ReviewForm/>} />
         <Route exact path='/metrics' element={<Metrics/>} />
+        <Route exact path='/admin' element={<Admin/>} />
       </Routes>
     </>
   )

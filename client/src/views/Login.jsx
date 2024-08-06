@@ -24,7 +24,11 @@ const Login = () => {
       loginUser(user);
       setUsername('')
       setPassword('')
-      navigate('/home')
+      if(user.type == 'admin'){
+        navigate('/admin')
+      }else {
+        navigate('/home')
+      }
     } catch (exception) {
       setErrorMessage('Error: Wrong credentials')
       setAlertType('alert-error')
@@ -53,7 +57,7 @@ const Login = () => {
     <div>
       {user === null ?
         loginForm() :
-        <Navigate to="/home" />
+        user.type === 'admin' ? (<Navigate to="/admin" />) : (<Navigate to="/home" />)
       }
     </div>
   )

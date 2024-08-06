@@ -6,7 +6,7 @@ import businessServ from '../services/business'
 import reviewServ from '../services/review'
 
 const BusinessProfile = () => {
-    const { user } = useContext(UserContext)
+    const { user, account, loading: userLoading } = useContext(UserContext)
     const { businessId } = useParams()
     const navigate = useNavigate()
 
@@ -14,11 +14,14 @@ const BusinessProfile = () => {
     const [businessHours, setBusinessHours] = useState([])
     const [loading, setLoading] = useState(true)
     const [reply, setReply] = useState('')
+    const [rating, setRating] = useState(null)
 
     useEffect(() => {
-        if (!user) {
-            setLoading(false);
-            return;
+        if (userLoading) { return }
+
+        if (!user || !account) {
+            navigate('/')
+            return
         }
         async function fetchData() {
             let b = await businessServ.getBusiness(businessId)
@@ -28,12 +31,16 @@ const BusinessProfile = () => {
                 const parsedAvailability = JSON.parse(b.availability[0])
                 setBusinessHours(parsedAvailability)
             }
+
+            const r = await reviewServ.getRating(businessId)
+            setRating(r)
+
             setLoading(false);
         }
 
         fetchData()
 
-    }, [businessId, user])
+    }, [businessId, userLoading, user])
 
     const onClickDetails = (serviceId) => {
         navigate(`/service/${serviceId}`)
@@ -56,12 +63,12 @@ const BusinessProfile = () => {
 
     const handleSubmitReply = async (reviewId, event) => {
         try {
-            await reviewServ.reply({reply}, reviewId)
+            await reviewServ.reply({ reply }, reviewId)
             setReply('')
             //navigate(`/business/${businessId}`)
-          } catch (exception) {
+        } catch (exception) {
             console.log(exception.response.data.error)
-          }
+        }
     }
 
     if (loading) {
@@ -72,6 +79,8 @@ const BusinessProfile = () => {
         return <Navigate to="/" />;
     }
 
+    const roundedAvgRating = rating ? Math.round(rating.averageRating) : 0;
+
     return (
         <>
             {business ? (
@@ -79,6 +88,12 @@ const BusinessProfile = () => {
                     <header className="bg-white shadow">
                         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                             <h1 className="text-3xl font-bold tracking-tight text-gray-900">{business.businessName}</h1>
+
+                            {roundedAvgRating !== 0 ? (
+                                <div className='mt-4 flex'>
+                                    <Rating rating={roundedAvgRating} /> <span>{rating.averageRating}</span>
+                                </div>
+                            ) : ('')}
                         </div>
                     </header>
                     <main>
@@ -148,11 +163,6 @@ const BusinessProfile = () => {
                                                     </p>
                                                 </blockquote>
                                                 <figcaption className="flex items-center mt-6 space-x-3 rtl:space-x-reverse">
-                                                    {/*<img
-                                        className="w-6 h-6 rounded-full"
-                                        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-                                        alt="profile picture"
-                                    />*/}
                                                     <div className="flex items-center divide-x-2 rtl:divide-x-reverse divide-gray-300 dark:divide-gray-700">
                                                         <cite className="pe-3 font-medium text-gray-900 dark:text-white">
                                                             {review.customer.firstName} {review.customer.lastName}
@@ -164,34 +174,34 @@ const BusinessProfile = () => {
                                                 <p> {business.businessName}: {review.reply}</p>
                                             ) : (
                                                 user && business && user.id === business.login && (
-                                                <form onSubmit={(event) => handleSubmitReply(review._id, event)}>
-                                                    <label htmlFor="reply" className="block text-sm font-medium leading-6 text-gray-900">
-                                                        Reply to this review
-                                                    </label>
-                                                    <div className="mt-2">
-                                                        <textarea
-                                                            id="description"
-                                                            name="description"
-                                                            rows={2}
-                                                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                            value={reply}
-                                                            onChange={({ target }) => setReply(target.value)}
-                                                            required
-                                                        />
-                                                    </div><br></br>
-                                                    <button
-                                                        type="submit"
-                                                        className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                                    >
-                                                        Submit
-                                                    </button>
-                                                </form>
-                                            ))}
+                                                    <form onSubmit={(event) => handleSubmitReply(review._id, event)}>
+                                                        <label htmlFor="reply" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            Reply to this review
+                                                        </label>
+                                                        <div className="mt-2">
+                                                            <textarea
+                                                                id="description"
+                                                                name="description"
+                                                                rows={2}
+                                                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                value={reply}
+                                                                onChange={({ target }) => setReply(target.value)}
+                                                                required
+                                                            />
+                                                        </div><br></br>
+                                                        <button
+                                                            type="submit"
+                                                            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                        >
+                                                            Submit
+                                                        </button>
+                                                    </form>
+                                                ))}
                                             <div className="border-b border-gray-900/10 pb-12"></div>
                                             <br></br>
                                         </div>))
                                 ) : (
-                                    <p> This business offers no services yet :( </p>
+                                    <p> This business has no reviews yet :( </p>
                                 )}
                             </div>
                         </div>

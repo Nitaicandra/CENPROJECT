@@ -8,7 +8,7 @@ import BookingService from '../services/booking'
 import Alert from '../components/Alert'
 
 const Home = () => {
-    const { user } = useContext(UserContext)
+    const { user, loading } = useContext(UserContext)
     const navigate = useNavigate()
 
     const [alertMessage, setAlertMessage] = useState(null)
@@ -33,6 +33,14 @@ const Home = () => {
         }
         fetchData()
     }, []);
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
+    if (!user || user.type === 'admin') {
+        return <Navigate to="/" />
+    }
 
     const handleSearch = () => {
         if (query.trim() !== '') {

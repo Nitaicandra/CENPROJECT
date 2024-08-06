@@ -156,7 +156,7 @@ if (user) {
       setTimeout(() => {
         setAlertMessage(null)
         navigate('/')
-      }, 5000)
+      }, 2000)
 
     } catch (exception) {
       setAlertMessage(exception.response.data.error)
